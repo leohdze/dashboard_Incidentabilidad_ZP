@@ -335,7 +335,23 @@ nav {
     <button class="mpill" onclick="setMes('feb',this)">Febrero</button>
     <button class="mpill" onclick="setMes('mar',this)">Marzo</button>
   </div>
+  <div style="width:1px;background:var(--border);margin:0 6px;align-self:stretch;"></div>
+  <span class="month-label">Región:</span>
+  <select id="gRegion" onchange="setRegion(this.value)" style="background:var(--surface2);border:1.5px solid var(--border);color:var(--text);padding:5px 12px;border-radius:3px;font-family:'Barlow',sans-serif;font-size:.78rem;font-weight:600;outline:none;cursor:pointer;">
+    <option value="">Todas</option>
+    <option>R. Acapulco</option>
+    <option>R. Coecillo</option>
+    <option>R. Cuernavaca</option>
+    <option>R. Litos</option>
+    <option>R. Montaña</option>
+    <option>R. Pacífico</option>
+    <option>R. Puebla</option>
+    <option>R. Puebla Foránea</option>
+    <option>R. Tenango</option>
+    <option>R. Tlaxcala</option>
+  </select>
   <span class="mes-tag" id="mesTag">Acumulado ENE–MAR</span>
+  <span class="mes-tag" id="regionTag" style="display:none;background:#e8f0fe;color:#1a56db;border-color:#a4c2f7;"></span>
 </div>
 
 <!-- NAV -->
@@ -441,7 +457,23 @@ const cd = {
 };
 
 let MES = 'all';
+let REG = '';
 let charts = {};
+
+function setRegion(r) {
+  REG = r;
+  const tag = document.getElementById('regionTag');
+  if(r) {
+    tag.textContent = '📍 ' + r;
+    tag.style.display = 'inline-block';
+  } else {
+    tag.style.display = 'none';
+  }
+  refreshAll();
+}
+
+function DF() { return REG ? D.filter(d=>d.region===REG) : D; }
+function activeREGIONS() { return REG ? [REG] : REGIONS; }
 
 function val(d, type) {
   if(MES === 'all') {
@@ -454,8 +486,8 @@ function val(d, type) {
 
 function getRS() {
   const rs={};
-  REGIONS.forEach(r=>{rs[r]={pa:0,mtc:0,lti:0,sif:0,alm:0,rep:0,total:0,ene:0,feb:0,mar:0}});
-  D.forEach(d=>{
+  activeREGIONS().forEach(r=>{rs[r]={pa:0,mtc:0,lti:0,sif:0,alm:0,rep:0,total:0,ene:0,feb:0,mar:0}});
+  DF().forEach(d=>{
     const r=rs[d.region]; if(!r)return;
     r.pa+=val(d,'pa'); r.mtc+=val(d,'mtc'); r.lti+=val(d,'lti'); r.sif+=val(d,'sif');
     r.total+=val(d,'total');
@@ -497,13 +529,14 @@ function refreshAll() {
   updateCharts();
   updateHeatmaps();
   renderRanking();
+  renderReincidentes();
 }
 
 function updateKPIs() {
-  const pa=D.reduce((s,d)=>s+val(d,'pa'),0);
-  const mtc=D.reduce((s,d)=>s+val(d,'mtc'),0);
-  const lti=D.reduce((s,d)=>s+val(d,'lti'),0);
-  const sif=D.reduce((s,d)=>s+val(d,'sif'),0);
+  const pa=DF().reduce((s,d)=>s+val(d,'pa'),0);
+  const mtc=DF().reduce((s,d)=>s+val(d,'mtc'),0);
+  const lti=DF().reduce((s,d)=>s+val(d,'lti'),0);
+  const sif=DF().reduce((s,d)=>s+val(d,'sif'),0);
   const tot=pa+mtc+lti+sif||1;
   document.getElementById('kpi-pa').textContent=pa;
   document.getElementById('kpi-mtc').textContent=mtc;
@@ -516,19 +549,20 @@ function updateKPIs() {
 }
 
 function updateSummary() {
-  const tot=D.reduce((s,d)=>s+val(d,'total'),0);
-  const conInc=D.filter(d=>val(d,'total')>0).length;
+  const tot=DF().reduce((s,d)=>s+val(d,'total'),0);
+  const conInc=DF().filter(d=>val(d,'total')>0).length;
   const RS=getRS();
-  const SR=[...REGIONS].sort((a,b)=>RS[b].total-RS[a].total);
+  const SR=[...activeREGIONS()].sort((a,b)=>RS[b].total-RS[a].total);
   const topReg=SR[0];
-  const topCoord=[...D].sort((a,b)=>val(b,'total')-val(a,'total'))[0];
+  const topCoord=[...DF()].sort((a,b)=>val(b,'total')-val(a,'total'))[0];
+  const reinCount=getReinFiltered().length;
   document.getElementById('summaryBar').innerHTML=`
     <div class="sb-item"><span class="sb-label">Total período</span><span class="sb-value">${tot}</span></div>
     <div class="sb-item"><span class="sb-label">Con incidentes</span><span class="sb-value">${conInc}</span></div>
     <div class="sb-item"><span class="sb-label">Sin incidentes</span><span class="sb-value">${148-conInc}</span></div>
     <div class="sb-item"><span class="sb-label">Región crítica</span><span class="sb-value red">${topReg} · ${RS[topReg].total}</span></div>
     <div class="sb-item"><span class="sb-label">Top coordinador</span><span class="sb-value red">${topCoord.coordinador.trim().split(' ').slice(0,2).join(' ')} · ${val(topCoord,'total')}</span></div>
-    <div class="sb-item"><span class="sb-label">Reincidentes 3m</span><span class="sb-value">2</span></div>
+    <div class="sb-item"><span class="sb-label">Reincidentes 3m</span><span class="sb-value">${reinCount}</span></div>
   `;
 }
 
@@ -536,7 +570,7 @@ function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
 
 function updateCharts() {
   const RS=getRS();
-  const SR=[...REGIONS].sort((a,b)=>RS[b].total-RS[a].total);
+  const SR=[...activeREGIONS()].sort((a,b)=>RS[b].total-RS[a].total);
 
   dc('cRegion');
   charts['cRegion']=new Chart(document.getElementById('cRegion'),{
@@ -545,10 +579,10 @@ function updateCharts() {
     options:{...cd,plugins:{legend:{display:false}}}
   });
 
-  const pa=D.reduce((s,d)=>s+val(d,'pa'),0);
-  const mtc=D.reduce((s,d)=>s+val(d,'mtc'),0);
-  const lti=D.reduce((s,d)=>s+val(d,'lti'),0);
-  const sif=D.reduce((s,d)=>s+val(d,'sif'),0);
+  const pa=DF().reduce((s,d)=>s+val(d,'pa'),0);
+  const mtc=DF().reduce((s,d)=>s+val(d,'mtc'),0);
+  const lti=DF().reduce((s,d)=>s+val(d,'lti'),0);
+  const sif=DF().reduce((s,d)=>s+val(d,'sif'),0);
   dc('cDonut');
   charts['cDonut']=new Chart(document.getElementById('cDonut'),{
     type:'doughnut',
@@ -566,9 +600,9 @@ function updateCharts() {
     options:{...cd,scales:{x:{stacked:true,...cd.scales.x},y:{stacked:true,...cd.scales.y}}}
   });
 
-  const eT=[D.reduce((s,d)=>s+d.ene_pa,0),D.reduce((s,d)=>s+d.ene_mtc,0),D.reduce((s,d)=>s+d.ene_lti,0),D.reduce((s,d)=>s+d.ene_sif,0)];
-  const fT=[D.reduce((s,d)=>s+d.feb_pa,0),D.reduce((s,d)=>s+d.feb_mtc,0),D.reduce((s,d)=>s+d.feb_lti,0),D.reduce((s,d)=>s+d.feb_sif,0)];
-  const mT=[D.reduce((s,d)=>s+d.mar_pa,0),D.reduce((s,d)=>s+d.mar_mtc,0),D.reduce((s,d)=>s+d.mar_lti,0),D.reduce((s,d)=>s+d.mar_sif,0)];
+  const eT=[DF().reduce((s,d)=>s+d.ene_pa,0),DF().reduce((s,d)=>s+d.ene_mtc,0),DF().reduce((s,d)=>s+d.ene_lti,0),DF().reduce((s,d)=>s+d.ene_sif,0)];
+  const fT=[DF().reduce((s,d)=>s+d.feb_pa,0),DF().reduce((s,d)=>s+d.feb_mtc,0),DF().reduce((s,d)=>s+d.feb_lti,0),DF().reduce((s,d)=>s+d.feb_sif,0)];
+  const mT=[DF().reduce((s,d)=>s+d.mar_pa,0),DF().reduce((s,d)=>s+d.mar_mtc,0),DF().reduce((s,d)=>s+d.mar_lti,0),DF().reduce((s,d)=>s+d.mar_sif,0)];
   dc('cEvol');
   charts['cEvol']=new Chart(document.getElementById('cEvol'),{
     type:'line',
@@ -581,7 +615,7 @@ function updateCharts() {
     options:{...cd}
   });
 
-  const top10=[...D].sort((a,b)=>val(b,'total')-val(a,'total')).filter(d=>val(d,'total')>0).slice(0,10);
+  const top10=[...DF()].sort((a,b)=>val(b,'total')-val(a,'total')).filter(d=>val(d,'total')>0).slice(0,10);
   const mesAlpha=(m)=>MES==='all'||MES===m?1:.2;
   dc('cTop10');
   charts['cTop10']=new Chart(document.getElementById('cTop10'),{
@@ -600,9 +634,9 @@ function updateCharts() {
   dc('cAlmRepTend');
   charts['cAlmRepTend']=new Chart(document.getElementById('cAlmRepTend'),{
     type:'bar',
-    data:{labels:REGIONS.map(r=>r.replace('R.','')),datasets:[
-      {label:'Almacén',data:REGIONS.map(r=>RS[r].alm),backgroundColor:'#c8000a',borderRadius:3},
-      {label:'Reparto',data:REGIONS.map(r=>RS[r].rep),backgroundColor:'#3d3d3d',borderRadius:3}
+    data:{labels:activeREGIONS().map(r=>r.replace('R.','')),datasets:[
+      {label:'Almacén',data:activeREGIONS().map(r=>RS[r].alm),backgroundColor:'#c8000a',borderRadius:3},
+      {label:'Reparto',data:activeREGIONS().map(r=>RS[r].rep),backgroundColor:'#3d3d3d',borderRadius:3}
     ]},
     options:{...cd,indexAxis:'y',scales:{x:{stacked:true,...cd.scales.x},y:{stacked:true,...cd.scales.y}}}
   });
@@ -611,7 +645,7 @@ function updateCharts() {
   const evolColors=['#c8000a','#e6001a','#8b0006','#d42008','#ff4040','#a00010','#e63020','#cc1808','#1a7a3a','#1a1a1a'];
   charts['cRegEvol']=new Chart(document.getElementById('cRegEvol'),{
     type:'line',
-    data:{labels:['Enero','Febrero','Marzo'],datasets:REGIONS.map((r,i)=>({
+    data:{labels:['Enero','Febrero','Marzo'],datasets:activeREGIONS().map((r,i)=>({
       label:r.replace('R.',''),data:[RS[r].ene,RS[r].feb,RS[r].mar],
       borderColor:evolColors[i],backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2
     }))},
@@ -626,11 +660,11 @@ function updateCharts() {
       const base=stackColors[t];
       const alpha=MES==='all'?(mi===0?.9:mi===1?.65:.4):(MES===m?.9:.15);
       const hex=Math.round(alpha*255).toString(16).padStart(2,'0');
-      ds2.push({label:`${['Ene','Feb','Mar'][mi]}-${t==='sif'?'SIF/SIFp':t.toUpperCase()}`,data:REGIONS.map(r=>D.filter(d=>d.region===r).reduce((s,d)=>s+d[`${m}_${t}`],0)),backgroundColor:base+hex,borderRadius:2,stack:`s${mi}`});
+      ds2.push({label:`${['Ene','Feb','Mar'][mi]}-${t==='sif'?'SIF/SIFp':t.toUpperCase()}`,data:activeREGIONS().map(r=>D.filter(d=>d.region===r).reduce((s,d)=>s+d[`${m}_${t}`],0)),backgroundColor:base+hex,borderRadius:2,stack:`s${mi}`});
     });
   });
   charts['cBarStack']=new Chart(document.getElementById('cBarStack'),{
-    type:'bar',data:{labels:REGIONS.map(r=>r.replace('R.','')),datasets:ds2},
+    type:'bar',data:{labels:activeREGIONS().map(r=>r.replace('R.','')),datasets:ds2},
     options:{...cd,plugins:{legend:{display:false}},scales:{x:{stacked:true,...cd.scales.x},y:{stacked:true,...cd.scales.y}}}
   });
 }
@@ -658,7 +692,7 @@ function buildHM(cid,rows,cols,getFn){
 
 function updateHeatmaps(){
   const RS=getRS();
-  const SR=[...REGIONS].sort((a,b)=>RS[b].total-RS[a].total);
+  const SR=[...activeREGIONS()].sort((a,b)=>RS[b].total-RS[a].total);
   buildHM('hmRegMes',SR,['Enero','Febrero','Marzo'],(r,m)=>RS[r][{Enero:'ene',Febrero:'feb',Marzo:'mar'}[m]]);
   buildHM('hmRegTipo',SR,['PA','MTC','LTI','SIF/SIFp'],(r,t)=>RS[r][t==='SIF/SIFp'?'sif':t.toLowerCase()]);
 }
@@ -669,7 +703,8 @@ function renderRanking(){
   const zona=document.getElementById('fZona').value;
   const min=parseInt(document.getElementById('fMin').value)||0;
   const search=document.getElementById('fSearch').value.toLowerCase();
-  let f=D.filter(d=>(!reg||d.region===reg)&&(!zona||d.zona_reparto===zona)&&(!search||d.coordinador.toLowerCase().includes(search)));
+  const regFinal = REG || reg;
+  let f=D.filter(d=>(!regFinal||d.region===regFinal)&&(!zona||d.zona_reparto===zona)&&(!search||d.coordinador.toLowerCase().includes(search)));
   const mx=Math.max(...f.map(d=>val(d,'total')),1);
   f=f.filter(d=>val(d,'total')>=min);
 
@@ -732,10 +767,13 @@ function sR(k){rSort={key:k,asc:rSort.key===k?!rSort.asc:false};renderRanking();
 
 // Reincidentes
 const REIN=D.filter(d=>d.ene_total>0&&d.feb_total>0&&d.mar_total>0);
-const g=document.getElementById('reinGrid');
-if(!REIN.length){g.innerHTML='<div class="empty">No hay reincidentes en los 3 meses.</div>';}
-else{
-  REIN.forEach(d=>{
+function getReinFiltered(){return REG?REIN.filter(d=>d.region===REG):REIN;}
+function renderReincidentes() {
+  const g=document.getElementById('reinGrid');
+  const lista=getReinFiltered();
+  if(!lista.length){g.innerHTML='<div class="empty">No hay reincidentes en los 3 meses'+(REG?' para '+REG:'')+'.</div>';return;}
+  g.innerHTML='';
+  lista.forEach(d=>{
     const chips=[d.ene_pa+d.feb_pa+d.mar_pa?`<span class="chip chip-pa">PA:${d.ene_pa+d.feb_pa+d.mar_pa}</span>`:'',d.ene_mtc+d.feb_mtc+d.mar_mtc?`<span class="chip chip-mtc">MTC:${d.ene_mtc+d.feb_mtc+d.mar_mtc}</span>`:'',d.ene_lti+d.feb_lti+d.mar_lti?`<span class="chip chip-lti">LTI:${d.ene_lti+d.feb_lti+d.mar_lti}</span>`:'',d.ene_sif+d.feb_sif+d.mar_sif?`<span class="chip chip-sif">SIF/SIFp:${d.ene_sif+d.feb_sif+d.mar_sif}</span>`:''].join('');
     g.innerHTML+=`<div class="reincidente-card">
       <span class="warn-badge">⚠ Reincidente</span>
