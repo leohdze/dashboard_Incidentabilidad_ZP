@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incidentes Zona Pacífico 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #f4f4f2;
+  --surface: #ffffff;
+  --surface2: #f0efed;
+  --border: #d8d5cf;
+  --border-strong: #b0ada6;
+  --text: #1a1a1a;
+  --text-2: #3d3d3d;
+  --text-muted: #6b6b6b;
+  --text-light: #999;
+
+  /* Semáforo */
+  --verde: #1a7a3a;
+  --verde-bg: #e8f5ed;
+  --verde-border: #a3d4b0;
+  --amarillo: #b37400;
+  --amarillo-bg: #fff8e1;
+  --amarillo-border: #f5d76e;
+  --rojo: #c8000a;
+  --rojo-bg: #fde8e8;
+  --rojo-border: #f4a0a0;
+  --rojo-dark: #8b0006;
+  --negro: #1a1a1a;
+
+  /* Tipos */
+  --pa:  #e8000d;
+  --mtc: #e67e00;
+  --lti: #1a7a3a;
+  --sif: #1a1a1a;
+
+  --radius: 6px;
+  --shadow: 0 1px 4px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.05);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.1);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Barlow', sans-serif; min-height:100vh; font-size:14px; }
+
+/* ── HEADER ── */
+header {
+  background: var(--negro);
+  color: #fff;
+  padding: 0 36px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px; border-bottom: 3px solid var(--rojo);
+}
+.logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.5rem; font-weight: 900; letter-spacing: .02em;
+  text-transform: uppercase; display: flex; align-items: center; gap: 14px;
+}
+.logo-pill {
+  background: var(--rojo); color: #fff;
+  padding: 4px 10px; border-radius: 3px;
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+}
+.header-meta { display:flex; gap:10px; align-items:center; }
+.hbadge {
+  font-size: .68rem; font-weight: 600; letter-spacing: .06em;
+  padding: 4px 10px; border-radius: 3px;
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.8);
+  text-transform: uppercase;
+}
+
+/* ── MES FILTER BAR ── */
+.month-bar {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 10px 36px; display: flex; align-items: center; gap: 14px;
+  position: sticky; top: 0; z-index: 200; box-shadow: var(--shadow);
+}
+.month-label {
+  font-size: .72rem; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .08em; white-space: nowrap;
+}
+.month-pills { display: flex; gap: 4px; }
+.mpill {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  padding: 5px 18px; border-radius: 3px; cursor: pointer;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface2); color: var(--text-muted);
+  transition: all .15s;
+}
+.mpill:hover { background: var(--bg); color: var(--text); border-color: var(--text-muted); }
+.mpill.active {
+  background: var(--negro); color: #fff; border-color: var(--negro);
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+.mpill.active-all.active { background: var(--rojo); border-color: var(--rojo); }
+.mes-tag {
+  margin-left: auto; font-size: .7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; padding: 4px 12px; border-radius: 3px;
+  background: var(--rojo-bg); color: var(--rojo); border: 1px solid var(--rojo-border);
+}
+
+/* ── NAV ── */
+nav {
+  background: var(--surface); border-bottom: 2px solid var(--border);
+  padding: 0 36px; display: flex; gap: 0;
+  position: sticky; top: 45px; z-index: 100;
+}
+.tab {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  padding: 12px 20px; cursor: pointer; border: none; background: transparent;
+  color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px;
+  transition: all .15s;
+}
+.tab:hover { color: var(--text); background: var(--bg); }
+.tab.active { color: var(--rojo); border-bottom-color: var(--rojo); background: transparent; }
+
+/* ── PAGES ── */
+.page { display:none; padding: 24px 36px 56px; }
+.page.active { display: block; }
+
+/* ── KPIs ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+.kpi {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+  padding: 18px 20px; position: relative; overflow: hidden;
+  transition: box-shadow .2s;
+}
+.kpi:hover { box-shadow: var(--shadow-md); }
+.kpi-stripe { position:absolute; top:0; left:0; right:0; height:4px; }
+.kpi.pa .kpi-stripe { background: var(--pa); }
+.kpi.mtc .kpi-stripe { background: var(--mtc); }
+.kpi.lti .kpi-stripe { background: var(--verde); }
+.kpi.sif .kpi-stripe { background: var(--negro); }
+.kpi-label {
+  font-size: .68rem; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px;
+}
+.kpi-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2.8rem; font-weight: 900; line-height: 1; color: var(--text);
+}
+.kpi.pa .kpi-value  { color: var(--pa); }
+.kpi.mtc .kpi-value { color: var(--mtc); }
+.kpi.lti .kpi-value { color: var(--verde); }
+.kpi.sif .kpi-value { color: var(--negro); }
+.kpi-pct {
+  font-size: .75rem; font-weight: 600; margin-top: 6px; color: var(--text-muted);
+}
+.kpi-name { font-size: .72rem; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+
+/* ── SEMÁFORO (clasificación automática) ── */
+.semaforo {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 20px; font-size: .68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.sem-verde  { background: var(--verde-bg);   color: var(--verde);   border: 1px solid var(--verde-border); }
+.sem-amarillo { background: var(--amarillo-bg); color: var(--amarillo); border: 1px solid var(--amarillo-border); }
+.sem-rojo   { background: var(--rojo-bg);    color: var(--rojo);    border: 1px solid var(--rojo-border); }
+.sem-negro  { background: #1a1a1a; color: #fff; border: 1px solid #000; }
+
+/* ── SUMMARY BAR ── */
+.summary-bar {
+  background: var(--negro); color: #fff;
+  border-radius: var(--radius); padding: 14px 24px;
+  display: flex; gap: 0; align-items: stretch; margin-bottom: 18px;
+  overflow: hidden;
+}
+.sb-item {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 0 28px; border-right: 1px solid rgba(255,255,255,.12);
+}
+.sb-item:first-child { padding-left: 0; }
+.sb-item:last-child { border-right: none; }
+.sb-label { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.5); }
+.sb-value { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; }
+.sb-value.red { color: #ff6b6b; }
+
+/* ── CHART BOXES ── */
+.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.chart-box {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); box-shadow: var(--shadow); padding: 20px;
+}
+.chart-box.full { grid-column: 1/-1; }
+.chart-box.third { grid-column: span 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.chart-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .85rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-2); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.chart-title-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--rojo); flex-shrink: 0;
+}
+
+/* ── HEATMAP ── */
+.heatmap-table { width:100%; border-collapse:collapse; font-size:.72rem; }
+.heatmap-table th {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-muted); padding: 6px 10px; text-align: center;
+  border-bottom: 2px solid var(--border);
+}
+.heatmap-table td { padding: 7px 10px; text-align: center; font-weight: 700; border-bottom: 1px solid var(--border); }
+.heatmap-table .row-label { text-align: left; color: var(--text-2); font-weight: 600; font-size: .72rem; }
+/* Niveles de calor con semáforo */
+.h0 { color: var(--text-light); background: var(--surface2); }
+.h1 { background: #27ae60; color: #fff; font-weight:800; }   /* verde vivo */
+.h2 { background: #2ecc71; color: #fff; font-weight:800; }   /* verde claro */
+.h3 { background: #f1c40f; color: #1a1a1a; font-weight:800; } /* amarillo vivo */
+.h4 { background: #e67e22; color: #fff; font-weight:800; }   /* naranja-rojo */
+.h5 { background: #e8000d; color: #fff; font-weight:800; }   /* rojo vivo crítico */
+
+/* ── RANKING ── */
+.ranking-controls {
+  display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center;
+}
+.ranking-controls select,
+.ranking-controls input {
+  background: var(--surface); border: 1.5px solid var(--border);
+  color: var(--text); padding: 7px 12px; border-radius: var(--radius);
+  font-family: 'Barlow', sans-serif; font-size: .78rem; font-weight: 500;
+  outline: none; cursor: pointer;
+}
+.ranking-controls select:focus,
+.ranking-controls input:focus { border-color: var(--rojo); }
+
+.ranking-table { width:100%; border-collapse:collapse; }
+.ranking-table thead th {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-muted); padding: 8px 10px; text-align: left;
+  border-bottom: 2px solid var(--border); cursor: pointer; user-select: none;
+  white-space: nowrap;
+}
+.ranking-table thead th:hover { color: var(--text); }
+.ranking-table tbody td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.ranking-table tbody tr:hover td { background: var(--surface2); }
+.rank-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: .9rem; color: var(--text-light); min-width: 28px;
+}
+.rank-num.gold   { color: #b8860b; }
+.rank-num.silver { color: #777; }
+.rank-num.bronze { color: #8b5e3c; }
+.rank-name { font-weight: 600; font-size: .8rem; color: var(--text); }
+.rank-region { font-size: .7rem; color: var(--text-muted); font-weight: 500; }
+.rank-total {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 1.1rem;
+}
+.bar-mini { height: 4px; background: var(--border); border-radius: 2px; margin-top: 4px; }
+.bar-fill-rojo    { height:4px; background:var(--rojo); border-radius:2px; }
+.bar-fill-verde   { height:4px; background:var(--verde); border-radius:2px; }
+.bar-fill-amarillo{ height:4px; background: #e6a800; border-radius:2px; }
+
+/* chips */
+.chip { display:inline-block; padding:2px 7px; border-radius:3px; font-size:.65rem; font-weight:700; margin:1px; }
+.chip-pa  { background:rgba(232,0,13,.1);  color:var(--pa); }
+.chip-mtc { background:rgba(230,126,0,.1); color:var(--mtc); }
+.chip-lti { background:rgba(26,122,58,.1); color:var(--verde); }
+.chip-sif { background:rgba(26,26,26,.1);  color:var(--negro); }
+
+/* ── REINCIDENTES ── */
+.reincidentes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+.reincidente-card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--rojo-border); box-shadow: var(--shadow);
+  padding: 20px; position: relative;
+  border-top: 4px solid var(--rojo);
+}
+.rc-name { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1.1rem; color:var(--text); margin-bottom:2px; }
+.rc-region { font-size:.72rem; color:var(--text-muted); font-weight:500; margin-bottom:14px; }
+.rc-months { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.rc-month { background:var(--surface2); border-radius:4px; padding:10px; text-align:center; border:1px solid var(--border); }
+.rc-month-label { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); }
+.rc-month-val { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.8rem; color:var(--rojo); margin-top:2px; }
+.rc-total-row { margin-top:12px; padding-top:10px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.rc-total-label { font-size:.68rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; }
+.rc-total-val { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.4rem; color:var(--rojo); }
+.warn-badge {
+  position:absolute; top:16px; right:16px;
+  background:var(--rojo-bg); color:var(--rojo);
+  border:1px solid var(--rojo-border); border-radius:3px;
+  font-size:.62rem; font-weight:700; padding:2px 7px; text-transform:uppercase;
+}
+
+/* ── LEYENDA SEMÁFORO ── */
+.semaforo-leyenda {
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  padding:10px 16px; background:var(--surface2); border-radius:var(--radius);
+  border:1px solid var(--border); margin-bottom:14px;
+  font-size:.68rem; font-weight:600;
+}
+.semaforo-leyenda span { display:flex; align-items:center; gap:5px; }
+.sl-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+/* ── SECTION HEADER ── */
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.section-title { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--text); }
+
+/* ── UTILIDADES ── */
+.divider { height:1px; background:var(--border); margin:6px 0 18px; }
+.empty { text-align:center; padding:48px; color:var(--text-muted); font-size:.82rem; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <span class="logo-pill">ZP</span>
+    Zona Pacífico &nbsp;·&nbsp; Seguridad 2026
+  </div>
+  <div class="header-meta">
+    <span class="hbadge">Ene–Mar 2026</span>
+    <span class="hbadge">Hoja: REGISTRO</span>
+    <span class="hbadge">148 coordinadores</span>
+    <span class="hbadge">220 incidentes</span>
+  </div>
+</header>
+
+<!-- FILTRO MES -->
+<div class="month-bar">
+  <span class="month-label">Período:</span>
+  <div class="month-pills">
+    <button class="mpill active-all active" onclick="setMes('all',this)">▪ Todos</button>
+    <button class="mpill" onclick="setMes('ene',this)">Enero</button>
+    <button class="mpill" onclick="setMes('feb',this)">Febrero</button>
+    <button class="mpill" onclick="setMes('mar',this)">Marzo</button>
+  </div>
+  <span class="mes-tag" id="mesTag">Acumulado ENE–MAR</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <button class="tab active" onclick="showPage('resumen',this)">Resumen</button>
+  <button class="tab" onclick="showPage('tendencias',this)">Tendencias</button>
+  <button class="tab" onclick="showPage('heatmap',this)">Mapa de Calor</button>
+  <button class="tab" onclick="showPage('ranking',this)">Ranking</button>
+  <button class="tab" onclick="showPage('reincidentes',this)">Reincidentes</button>
+</nav>
+
+<!-- RESUMEN -->
+<div class="page active" id="page-resumen">
+  <div class="kpi-grid">
+    <div class="kpi pa"><div class="kpi-stripe"></div><div class="kpi-label">Primer Auxilio</div><div class="kpi-value" id="kpi-pa">—</div><div class="kpi-pct" id="kpi-pa-pct"></div><div class="kpi-name">PA</div></div>
+    <div class="kpi mtc"><div class="kpi-stripe"></div><div class="kpi-label">Tratamiento Médico</div><div class="kpi-value" id="kpi-mtc">—</div><div class="kpi-pct" id="kpi-mtc-pct"></div><div class="kpi-name">MTC</div></div>
+    <div class="kpi lti"><div class="kpi-stripe"></div><div class="kpi-label">Incidente Tiempo Perdido</div><div class="kpi-value" id="kpi-lti">—</div><div class="kpi-pct" id="kpi-lti-pct"></div><div class="kpi-name">LTI</div></div>
+    <div class="kpi sif"><div class="kpi-stripe"></div><div class="kpi-label">Alto Potencial</div><div class="kpi-value" id="kpi-sif">—</div><div class="kpi-pct" id="kpi-sif-pct"></div><div class="kpi-name">SIF/SIFp</div></div>
+  </div>
+  <div class="summary-bar" id="summaryBar"></div>
+  <div class="charts-row">
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Incidentes por Región</div><canvas id="cRegion" height="210"></canvas></div>
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Distribución por Tipo</div><canvas id="cDonut" height="210"></canvas></div>
+  </div>
+  <div class="charts-row">
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Almacén vs Reparto por Región</div><canvas id="cAlmRep" height="210"></canvas></div>
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Evolución Mensual por Tipo</div><canvas id="cEvol" height="210"></canvas></div>
+  </div>
+</div>
+
+<!-- TENDENCIAS -->
+<div class="page" id="page-tendencias">
+  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Evolución Mensual por Región</div><canvas id="cRegEvol" height="110"></canvas></div></div>
+  <div class="charts-row">
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Top 10 Coordinadores del Período</div><canvas id="cTop10" height="250"></canvas></div>
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Almacén vs Reparto</div><canvas id="cAlmRepTend" height="250"></canvas></div>
+  </div>
+</div>
+
+<!-- HEATMAP -->
+<div class="page" id="page-heatmap">
+  <div class="semaforo-leyenda">
+    <strong style="font-family:'Barlow Condensed';font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Escala semáforo:</strong>
+    <span><span class="sl-dot" style="background:#d0d0d0"></span> Sin incidentes</span>
+    <span><span class="sl-dot" style="background:#27ae60"></span> Bajo (≤15%)</span>
+    <span><span class="sl-dot" style="background:#2ecc71"></span> Bajo-medio (15–30%)</span>
+    <span><span class="sl-dot" style="background:#f1c40f"></span> Medio (30–50%)</span>
+    <span><span class="sl-dot" style="background:#e67e22"></span> Alto (50–70%)</span>
+    <span><span class="sl-dot" style="background:#e8000d"></span> Crítico (&gt;70%)</span>
+  </div>
+  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Mapa de Calor: Región × Mes</div><div id="hmRegMes"></div></div></div>
+  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Mapa de Calor: Región × Tipo de Incidente</div><div id="hmRegTipo"></div></div></div>
+  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Composición por Tipo y Mes</div><canvas id="cBarStack" height="90"></canvas></div></div>
+</div>
+
+<!-- RANKING -->
+<div class="page" id="page-ranking">
+  <div class="ranking-controls">
+    <select id="fReg" onchange="renderRanking()">
+      <option value="">Todas las regiones</option>
+      <option>R. Acapulco</option><option>R. Coecillo</option><option>R. Cuernavaca</option>
+      <option>R. Litos</option><option>R. Montaña</option><option>R. Pacífico</option>
+      <option>R. Puebla</option><option>R. Puebla Foránea</option><option>R. Tenango</option><option>R. Tlaxcala</option>
+    </select>
+    <select id="fZona" onchange="renderRanking()">
+      <option value="">Almacén y Reparto</option><option>Almacen</option><option>Reparto</option>
+    </select>
+    <select id="fMin" onchange="renderRanking()">
+      <option value="0">Todos los niveles</option><option value="1">Con incidentes (≥1)</option>
+      <option value="3">≥3 incidentes</option><option value="5">≥5 incidentes</option>
+    </select>
+    <input type="text" id="fSearch" placeholder="🔍 Buscar coordinador..." oninput="renderRanking()" style="min-width:220px">
+  </div>
+  <div id="rankTable"></div>
+</div>
+
+<!-- REINCIDENTES -->
+<div class="page" id="page-reincidentes">
+  <div class="summary-bar" style="margin-bottom:18px">
+    <div class="sb-item"><span class="sb-label">Criterio</span><span class="sb-value">Incidentes en Enero, Febrero Y Marzo</span></div>
+    <div class="sb-item"><span class="sb-label">Identificados</span><span class="sb-value red">2 coordinadores</span></div>
+    <div class="sb-item"><span class="sb-label">Nota</span><span class="sb-value" style="font-size:.82rem;opacity:.7">Este análisis siempre usa los 3 meses</span></div>
+  </div>
+  <div class="reincidentes-grid" id="reinGrid"></div>
+</div>
+
+<script>
+const D=[{"zona_reparto":"Almacen","region":"R. Acapulco","zona_pacifico":"Cayaco","coordinador":"N/A","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":0,"ene_total":0,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Acapulco","zona_pacifico":"Cayaco","coordinador":"Maria de Socorro Orozco Bibiano","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":2,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":0,"feb_total":2,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Acapulco","zona_pacifico":"Cuauhtémoc","coordinador":"Francisco Rivas Barragan","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":1,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Acapulco","zona_pacifico":"Cuauhtémoc","coordinador":"Rigoberto Rodiguez Sotelo","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Acapulco","zona_pacifico":"Cuauhtémoc","coordinador":"Martin Avila Martinez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":1,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":1,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Acapulco","zona_pacifico":"Renacimiento","coordinador":"Jose Luis Román Rodriguez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Acapulco","zona_pacifico":"Tecpan","coordinador":"Jesús Omar Herrera Dominguez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Luis Alberto Lara Suarez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":1,"total":1,"ene_total":0,"feb_total":0,"mar_total":1},{"zona_reparto":"Almacen","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Jesus Angel Guadarrama Perez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":1,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":0,"feb_total":2,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Myrna Angelica Perez Sanabria","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":1,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":0,"feb_total":2,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"David Lopez Gomez","ene_pa":0,"ene_mtc":1,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":1,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Adrian Palma Tepepa","ene_pa":2,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Irving Andres Maya Escutia","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":2,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":0,"feb_total":2,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Ricardo Nicanor Torres Mendoza","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":1,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Juan Roberto Fonseca Morales","ene_pa":2,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":2,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Luis Enrique Garcia Estrada","ene_pa":2,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":2,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Ezequiel Acosta Garcia","ene_pa":2,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Agustin Ibañez Aquino","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":1,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Coecillo","zona_pacifico":"Coecillo","coordinador":"Ivan Estrella Servin","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":1,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":0,"mar_total":1},{"zona_reparto":"Almacen","region":"R. Cuernavaca","zona_pacifico":"Progreso","coordinador":"Juan Manuel Colin","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Cuernavaca","zona_pacifico":"Progreso","coordinador":"Jonathan Martinez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Cuernavaca","zona_pacifico":"Puente de Ixtla","coordinador":"Jose Emmanuel Orea Mejia","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":1,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":0,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Cuernavaca","zona_pacifico":"Cuernavaca","coordinador":"MiguelA Angel Salgado","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":1,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Cuernavaca","zona_pacifico":"Cuernavaca","coordinador":"Antonio Mendez Jaime","ene_pa":2,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Cuernavaca","zona_pacifico":"Cuernavaca","coordinador":"Jonathan Martinez","ene_pa":2,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Cuernavaca","zona_pacifico":"Cuernavaca","coordinador":"Jair Montes Ochoa","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":1,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Cuernavaca","zona_pacifico":"Polvorín","coordinador":"Victor Inocente Salgado Gomez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":1,"mar_sif":0,"total":1,"ene_total":0,"feb_total":0,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Cuernavaca","zona_pacifico":"Polvorín","coordinador":"Gerardo Geremias Calderon Segura","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":1,"total":1,"ene_total":0,"feb_total":0,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Cuernavaca","zona_pacifico":"Progreso","coordinador":"Efrain Avlia Bonilla","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Litos","zona_pacifico":"Litos","coordinador":"Ivan Santiago Velasco","ene_pa":2,"ene_mtc":1,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":3,"feb_total":0,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Litos","zona_pacifico":"Litos","coordinador":"Gabriela Juarez García","ene_pa":2,"ene_mtc":0,"ene_lti":0,"ene_sif":2,"feb_pa":2,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":7,"ene_total":4,"feb_total":3,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Litos","zona_pacifico":"Litos","coordinador":"Kalid Uriel Montiel Reyes","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":1,"total":2,"ene_total":1,"feb_total":0,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Litos","zona_pacifico":"Litos","coordinador":"Francisco Ernesto Marquez Arriaga","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":2,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":1,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":4,"ene_total":3,"feb_total":0,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Litos","zona_pacifico":"Litos","coordinador":"Norberto Velazquez Vilchis","ene_pa":6,"ene_mtc":0,"ene_lti":1,"ene_sif":0,"feb_pa":1,"feb_mtc":1,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":9,"ene_total":7,"feb_total":2,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Litos","zona_pacifico":"Litos","coordinador":"José Antonio Carrillo Moran","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":2,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":4,"ene_total":1,"feb_total":3,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Montaña","zona_pacifico":"Chilpancingo","coordinador":"Luis Enrique Valdez Galeana","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":2,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":0,"feb_total":2,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Montaña","zona_pacifico":"Chilpancingo","coordinador":"Rodolfo Cayetano Gonzaga","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Montaña","zona_pacifico":"Iguala","coordinador":"Alondra Uribe Beltran","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":1,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":1,"feb_total":0,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Montaña","zona_pacifico":"Iguala","coordinador":"Francisco Vargas Vazquez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":1,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":1,"feb_total":0,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Montaña","zona_pacifico":"Tlapa","coordinador":"Jorge Reyes bello","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":1,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Montaña","zona_pacifico":"Chilapa","coordinador":"Isaias Gregorio Pastor","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":1,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":0,"feb_total":2,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Montaña","zona_pacifico":"Chilpancingo","coordinador":"Joshua Kaeri Moyao Gaspar","ene_pa":0,"ene_mtc":1,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":1,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":1,"feb_total":2,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Montaña","zona_pacifico":"Chilpancingo","coordinador":"Ladislao Hipolito Barrios","ene_pa":1,"ene_mtc":0,"ene_lti":1,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":1,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":2,"feb_total":0,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Montaña","zona_pacifico":"Iguala","coordinador":"Daniel Casimiro Rodriguez","ene_pa":2,"ene_mtc":1,"ene_lti":0,"ene_sif":1,"feb_pa":4,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":8,"ene_total":4,"feb_total":4,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Montaña","zona_pacifico":"Iguala","coordinador":"Nestor Ivan Useda Procopio","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":2,"feb_mtc":0,"feb_lti":1,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":0,"feb_total":3,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Montaña","zona_pacifico":"Huitzuco","coordinador":"Nestor Ivan Useda Procopio","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":2,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":1,"feb_total":2,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Montaña","zona_pacifico":"Taxco","coordinador":"Emmanuel Martinez Martinez","ene_pa":1,"ene_mtc":0,"ene_lti":1,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Montaña","zona_pacifico":"Tlapa","coordinador":"Francisco Castrejon Hernandez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":1,"feb_pa":0,"feb_mtc":2,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":1,"feb_total":2,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Pacífico","zona_pacifico":"Pacífico","coordinador":"Alex Tebi Morales","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":2,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":1,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":0,"feb_total":2,"mar_total":1},{"zona_reparto":"Almacen","region":"R. Pacífico","zona_pacifico":"Pacífico","coordinador":"Yessica Vichis Reynoso","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":1,"feb_total":1,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Pacífico","zona_pacifico":"Pacífico","coordinador":"Cesar Barron Lopez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Pacífico","zona_pacifico":"Pacífico","coordinador":"Luis Alfonso Acuña","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":1,"total":1,"ene_total":0,"feb_total":0,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Pacífico","zona_pacifico":"Pacífico","coordinador":"Alan Ayala Barrera","ene_pa":3,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":1,"mar_lti":0,"mar_sif":1,"total":5,"ene_total":3,"feb_total":0,"mar_total":2},{"zona_reparto":"Reparto","region":"R. Pacífico","zona_pacifico":"Pacífico","coordinador":"Victor Francisco Perez Pichardo","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":1,"feb_total":2,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Pacífico","zona_pacifico":"Pacífico","coordinador":"Edgar Edglisamo Diaz","ene_pa":1,"ene_mtc":1,"ene_lti":0,"ene_sif":1,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":1,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":5,"ene_total":3,"feb_total":1,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Pacífico","zona_pacifico":"Pacífico","coordinador":"Vacante","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":1,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Pacífico","zona_pacifico":"Valle de Bravo","coordinador":"Armando Gomez Roque","ene_pa":2,"ene_mtc":1,"ene_lti":0,"ene_sif":0,"feb_pa":3,"feb_mtc":1,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":8,"ene_total":3,"feb_total":5,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Puebla","zona_pacifico":"Puebla Sur","coordinador":"David Martinez de Jesus","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":1,"feb_pa":2,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":4,"ene_total":1,"feb_total":3,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Puebla","zona_pacifico":"Puebla Sur","coordinador":"Jesus Alberto Perez Salazar","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Ciel Puebla","coordinador":"Alberto de Jesus Luis Barrios","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":3,"feb_pa":0,"feb_mtc":0,"feb_lti":1,"feb_sif":2,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":6,"ene_total":3,"feb_total":3,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Ciel Puebla","coordinador":"Iván de jesus Díaz Díaz","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":2,"feb_pa":3,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":7,"ene_total":3,"feb_total":4,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Ciel Puebla","coordinador":"Oscar Perez Cesar","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":1,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":1,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Ciel Puebla","coordinador":"Pablo Zenteno Juarez","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":2,"feb_pa":2,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":6,"ene_total":3,"feb_total":3,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Ciel Puebla","coordinador":"Yajayra Caselis Alvarez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":1,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":1,"feb_total":2,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Puebla Sur","coordinador":"Jose Luis Huerta Valeriano","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":3,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":0,"feb_total":3,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Puebla Sur","coordinador":"Eric Flores Dominguez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Puebla Sur","coordinador":"Jorge Rosas Cisneros","ene_pa":2,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":2,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Puebla Sur","coordinador":"Liliano Juarez Gomez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":2,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":0,"feb_total":2,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla","zona_pacifico":"Puebla Sur","coordinador":"Dayron Didier Ramirez Gutierrez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":1,"feb_lti":1,"feb_sif":1,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":0,"feb_total":3,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Puebla Foránea","zona_pacifico":"Ecológica","coordinador":"Ronaldo Garcia Moreno","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":1,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Puebla Foránea","zona_pacifico":"Puebla Norte","coordinador":"Isauro Medel Pineda","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":1,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":1,"feb_total":1,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Puebla Foránea","zona_pacifico":"Puebla Norte","coordinador":"Fabian Orlando Estevez Hernandez","ene_pa":2,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Puebla Foránea","zona_pacifico":"Mega Puebla","coordinador":"Luis Lezama Tzili","ene_pa":0,"ene_mtc":2,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Puebla Foránea","zona_pacifico":"Mega Puebla","coordinador":"Alejandro Santos Ruiz","ene_pa":0,"ene_mtc":1,"ene_lti":1,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla Foránea","zona_pacifico":"Ecológica","coordinador":"Gabriel Contreras Bermudez","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":1,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla Foránea","zona_pacifico":"Matamoros","coordinador":"Jose Grande Flores","ene_pa":1,"ene_mtc":0,"ene_lti":1,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla Foránea","zona_pacifico":"Puebla Norte","coordinador":"Victor Juarez Arellano","ene_pa":1,"ene_mtc":1,"ene_lti":0,"ene_sif":0,"feb_pa":2,"feb_mtc":1,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":5,"ene_total":2,"feb_total":3,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla Foránea","zona_pacifico":"Mega Puebla","coordinador":"Ricardo Rojas Morales","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":1,"feb_lti":1,"feb_sif":0,"mar_pa":0,"mar_mtc":1,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":0,"feb_total":2,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Puebla Foránea","zona_pacifico":"Mega Puebla","coordinador":"Jesus Antonio Hernandez Torres","ene_pa":3,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":3,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Puebla Foránea","zona_pacifico":"Mega Puebla","coordinador":"Cristhel Irene Ortiz","ene_pa":1,"ene_mtc":1,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":2,"feb_total":0,"mar_total":0},{"zona_reparto":"Almacen","region":"R. Tenango","zona_pacifico":"Ixtapan","coordinador":"Johan Aldahir Ramirez Jaimes","ene_pa":0,"ene_mtc":1,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":1,"feb_total":0,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Tenango","zona_pacifico":"Ixtapan","coordinador":"Jorge Luis Cayetano Pedroza","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Tenango","zona_pacifico":"Ixtapan","coordinador":"Sommer Sierra Lopez","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":1,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Tenango","zona_pacifico":"Tejupilco","coordinador":"Martin Solorio Miralrio","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Tenango","zona_pacifico":"Tenango","coordinador":"Alejandro Aguilar Lujano","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Tenango","zona_pacifico":"Tenango","coordinador":"Jose Guadalupe Morales Aguirre","ene_pa":0,"ene_mtc":0,"ene_lti":1,"ene_sif":1,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":3,"ene_total":2,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Tenango","zona_pacifico":"Tenango","coordinador":"Sergio Garcia Mulia","ene_pa":1,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":1,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":2,"ene_total":1,"feb_total":1,"mar_total":0},{"zona_reparto":"Reparto","region":"R. Tlaxcala","zona_pacifico":"Atlihuetzía","coordinador":"Miguel Arcangel Avila Lobaton","ene_pa":0,"ene_mtc":0,"ene_lti":1,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":0,"mar_mtc":0,"mar_lti":1,"mar_sif":0,"total":2,"ene_total":1,"feb_total":0,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Tlaxcala","zona_pacifico":"Atlihuetzía","coordinador":"Luis Angel Hernandez Milacatl","ene_pa":0,"ene_mtc":0,"ene_lti":2,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":1,"feb_sif":0,"mar_pa":1,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":4,"ene_total":2,"feb_total":1,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Tlaxcala","zona_pacifico":"Atlihuetzía","coordinador":"Jose Armando Aragon Grajales","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":1,"mar_mtc":0,"mar_lti":0,"mar_sif":0,"total":1,"ene_total":0,"feb_total":0,"mar_total":1},{"zona_reparto":"Reparto","region":"R. Tlaxcala","zona_pacifico":"Atlihuetzía","coordinador":"Fernando Rivera Solis","ene_pa":0,"ene_mtc":0,"ene_lti":0,"ene_sif":0,"feb_pa":0,"feb_mtc":0,"feb_lti":0,"feb_sif":0,"mar_pa":1,"mar_mtc":0,"mar_lti":1,"mar_sif":1,"total":3,"ene_total":0,"feb_total":0,"mar_total":3}];
+
+const REGIONS=['R. Acapulco','R. Coecillo','R. Cuernavaca','R. Litos','R. Montaña','R. Pacífico','R. Puebla','R. Puebla Foránea','R. Tenango','R. Tlaxcala'];
+
+// Escala de rojos para regiones
+const regColors=['#c8000a','#e6001a','#8b0006','#d42008','#ff3d3d','#a00010','#e63020','#cc1808','#b82010','#ff1a1a'];
+
+const typeColors={ pa:'#e8000d', mtc:'#e67e00', lti:'#1a7a3a', sif:'#1a1a1a' };
+
+const cd = {
+  plugins: { legend: { labels: { color:'#3d3d3d', font:{ family:"'Barlow',sans-serif", size:12, weight:'600' }}}},
+  scales: {
+    x: { ticks:{ color:'#6b6b6b', font:{ family:"'Barlow',sans-serif", size:11 }}, grid:{ color:'rgba(0,0,0,.06)' }},
+    y: { ticks:{ color:'#6b6b6b', font:{ family:"'Barlow',sans-serif", size:11 }}, grid:{ color:'rgba(0,0,0,.06)' }}
+  }
+};
+
+let MES = 'all';
+let charts = {};
+
+function val(d, type) {
+  if(MES === 'all') {
+    if(type==='total') return d.total;
+    return d[`ene_${type}`]+d[`feb_${type}`]+d[`mar_${type}`];
+  }
+  if(type==='total') return d[`${MES}_total`];
+  return d[`${MES}_${type}`];
+}
+
+function getRS() {
+  const rs={};
+  REGIONS.forEach(r=>{rs[r]={pa:0,mtc:0,lti:0,sif:0,alm:0,rep:0,total:0,ene:0,feb:0,mar:0}});
+  D.forEach(d=>{
+    const r=rs[d.region]; if(!r)return;
+    r.pa+=val(d,'pa'); r.mtc+=val(d,'mtc'); r.lti+=val(d,'lti'); r.sif+=val(d,'sif');
+    r.total+=val(d,'total');
+    r.ene+=d.ene_total; r.feb+=d.feb_total; r.mar+=d.mar_total;
+    if(d.zona_reparto==='Almacen') r.alm+=val(d,'total'); else r.rep+=val(d,'total');
+  });
+  return rs;
+}
+
+// Semáforo para totales de ranking
+function semTag(v, max) {
+  if(v===0) return '';
+  const p=v/max;
+  if(p<.15) return 'sem-verde';
+  if(p<.35) return 'sem-amarillo';
+  if(p<.65) return 'sem-rojo';
+  return 'sem-negro';
+}
+
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+function setMes(m, el) {
+  MES = m;
+  document.querySelectorAll('.mpill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const labels = {all:'Acumulado ENE–MAR', ene:'Solo Enero', feb:'Solo Febrero', mar:'Solo Marzo'};
+  document.getElementById('mesTag').textContent = labels[m];
+  refreshAll();
+}
+
+function refreshAll() {
+  updateKPIs();
+  updateSummary();
+  updateCharts();
+  updateHeatmaps();
+  renderRanking();
+}
+
+function updateKPIs() {
+  const pa=D.reduce((s,d)=>s+val(d,'pa'),0);
+  const mtc=D.reduce((s,d)=>s+val(d,'mtc'),0);
+  const lti=D.reduce((s,d)=>s+val(d,'lti'),0);
+  const sif=D.reduce((s,d)=>s+val(d,'sif'),0);
+  const tot=pa+mtc+lti+sif||1;
+  document.getElementById('kpi-pa').textContent=pa;
+  document.getElementById('kpi-mtc').textContent=mtc;
+  document.getElementById('kpi-lti').textContent=lti;
+  document.getElementById('kpi-sif').textContent=sif;
+  document.getElementById('kpi-pa-pct').textContent=`${Math.round(pa/tot*100)}% del total`;
+  document.getElementById('kpi-mtc-pct').textContent=`${Math.round(mtc/tot*100)}% del total`;
+  document.getElementById('kpi-lti-pct').textContent=`${Math.round(lti/tot*100)}% del total`;
+  document.getElementById('kpi-sif-pct').textContent=`${Math.round(sif/tot*100)}% del total`;
+}
+
+function updateSummary() {
+  const tot=D.reduce((s,d)=>s+val(d,'total'),0);
+  const conInc=D.filter(d=>val(d,'total')>0).length;
+  const RS=getRS();
+  const SR=[...REGIONS].sort((a,b)=>RS[b].total-RS[a].total);
+  const topReg=SR[0];
+  const topCoord=[...D].sort((a,b)=>val(b,'total')-val(a,'total'))[0];
+  document.getElementById('summaryBar').innerHTML=`
+    <div class="sb-item"><span class="sb-label">Total período</span><span class="sb-value">${tot}</span></div>
+    <div class="sb-item"><span class="sb-label">Con incidentes</span><span class="sb-value">${conInc}</span></div>
+    <div class="sb-item"><span class="sb-label">Sin incidentes</span><span class="sb-value">${148-conInc}</span></div>
+    <div class="sb-item"><span class="sb-label">Región crítica</span><span class="sb-value red">${topReg} · ${RS[topReg].total}</span></div>
+    <div class="sb-item"><span class="sb-label">Top coordinador</span><span class="sb-value red">${topCoord.coordinador.trim().split(' ').slice(0,2).join(' ')} · ${val(topCoord,'total')}</span></div>
+    <div class="sb-item"><span class="sb-label">Reincidentes 3m</span><span class="sb-value">2</span></div>
+  `;
+}
+
+function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+
+function updateCharts() {
+  const RS=getRS();
+  const SR=[...REGIONS].sort((a,b)=>RS[b].total-RS[a].total);
+
+  dc('cRegion');
+  charts['cRegion']=new Chart(document.getElementById('cRegion'),{
+    type:'bar',
+    data:{labels:SR.map(r=>r.replace('R.','')),datasets:[{data:SR.map(r=>RS[r].total),backgroundColor:SR.map((_,i)=>regColors[i]),borderRadius:4}]},
+    options:{...cd,plugins:{legend:{display:false}}}
+  });
+
+  const pa=D.reduce((s,d)=>s+val(d,'pa'),0);
+  const mtc=D.reduce((s,d)=>s+val(d,'mtc'),0);
+  const lti=D.reduce((s,d)=>s+val(d,'lti'),0);
+  const sif=D.reduce((s,d)=>s+val(d,'sif'),0);
+  dc('cDonut');
+  charts['cDonut']=new Chart(document.getElementById('cDonut'),{
+    type:'doughnut',
+    data:{labels:['PA — Primer Auxilio','MTC — Tratamiento Médico','LTI — Inc. Tiempo Perdido','SIF/SIFp — Alto Potencial'],datasets:[{data:[pa,mtc,lti,sif],backgroundColor:[typeColors.pa,typeColors.mtc,typeColors.lti,typeColors.sif],borderWidth:3,borderColor:'#fff'}]},
+    options:{plugins:{legend:{position:'bottom',labels:{color:'#3d3d3d',padding:12,font:{family:"'Barlow',sans-serif",size:12,weight:'600'}}}},cutout:'65%'}
+  });
+
+  dc('cAlmRep');
+  charts['cAlmRep']=new Chart(document.getElementById('cAlmRep'),{
+    type:'bar',
+    data:{labels:SR.map(r=>r.replace('R.','')),datasets:[
+      {label:'Almacén',data:SR.map(r=>RS[r].alm),backgroundColor:'#c8000a',borderRadius:3},
+      {label:'Reparto',data:SR.map(r=>RS[r].rep),backgroundColor:'#6b6b6b',borderRadius:3}
+    ]},
+    options:{...cd,scales:{x:{stacked:true,...cd.scales.x},y:{stacked:true,...cd.scales.y}}}
+  });
+
+  const eT=[D.reduce((s,d)=>s+d.ene_pa,0),D.reduce((s,d)=>s+d.ene_mtc,0),D.reduce((s,d)=>s+d.ene_lti,0),D.reduce((s,d)=>s+d.ene_sif,0)];
+  const fT=[D.reduce((s,d)=>s+d.feb_pa,0),D.reduce((s,d)=>s+d.feb_mtc,0),D.reduce((s,d)=>s+d.feb_lti,0),D.reduce((s,d)=>s+d.feb_sif,0)];
+  const mT=[D.reduce((s,d)=>s+d.mar_pa,0),D.reduce((s,d)=>s+d.mar_mtc,0),D.reduce((s,d)=>s+d.mar_lti,0),D.reduce((s,d)=>s+d.mar_sif,0)];
+  dc('cEvol');
+  charts['cEvol']=new Chart(document.getElementById('cEvol'),{
+    type:'line',
+    data:{labels:['Enero','Febrero','Marzo'],datasets:[
+      {label:'PA',data:[eT[0],fT[0],mT[0]],borderColor:typeColors.pa,backgroundColor:'rgba(232,0,13,.08)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.pa},
+      {label:'MTC',data:[eT[1],fT[1],mT[1]],borderColor:typeColors.mtc,backgroundColor:'rgba(230,126,0,.08)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.mtc},
+      {label:'LTI',data:[eT[2],fT[2],mT[2]],borderColor:typeColors.lti,backgroundColor:'rgba(26,122,58,.08)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.lti},
+      {label:'SIF/SIFp',data:[eT[3],fT[3],mT[3]],borderColor:typeColors.sif,backgroundColor:'rgba(26,26,26,.06)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.sif}
+    ]},
+    options:{...cd}
+  });
+
+  const top10=[...D].sort((a,b)=>val(b,'total')-val(a,'total')).filter(d=>val(d,'total')>0).slice(0,10);
+  const mesAlpha=(m)=>MES==='all'||MES===m?1:.2;
+  dc('cTop10');
+  charts['cTop10']=new Chart(document.getElementById('cTop10'),{
+    type:'bar',
+    data:{
+      labels:top10.map(d=>d.coordinador.trim().split(' ').slice(0,2).join(' ')),
+      datasets:[
+        {label:'Enero',data:top10.map(d=>d.ene_total),backgroundColor:`rgba(200,0,10,${mesAlpha('ene')})`,borderRadius:3},
+        {label:'Febrero',data:top10.map(d=>d.feb_total),backgroundColor:`rgba(107,107,107,${mesAlpha('feb')})`,borderRadius:3},
+        {label:'Marzo',data:top10.map(d=>d.mar_total),backgroundColor:`rgba(26,122,58,${mesAlpha('mar')})`,borderRadius:3}
+      ]
+    },
+    options:{...cd,indexAxis:'y',scales:{x:{stacked:true,...cd.scales.x},y:{stacked:true,...cd.scales.y}}}
+  });
+
+  dc('cAlmRepTend');
+  charts['cAlmRepTend']=new Chart(document.getElementById('cAlmRepTend'),{
+    type:'bar',
+    data:{labels:REGIONS.map(r=>r.replace('R.','')),datasets:[
+      {label:'Almacén',data:REGIONS.map(r=>RS[r].alm),backgroundColor:'#c8000a',borderRadius:3},
+      {label:'Reparto',data:REGIONS.map(r=>RS[r].rep),backgroundColor:'#3d3d3d',borderRadius:3}
+    ]},
+    options:{...cd,indexAxis:'y',scales:{x:{stacked:true,...cd.scales.x},y:{stacked:true,...cd.scales.y}}}
+  });
+
+  dc('cRegEvol');
+  const evolColors=['#c8000a','#e6001a','#8b0006','#d42008','#ff4040','#a00010','#e63020','#cc1808','#1a7a3a','#1a1a1a'];
+  charts['cRegEvol']=new Chart(document.getElementById('cRegEvol'),{
+    type:'line',
+    data:{labels:['Enero','Febrero','Marzo'],datasets:REGIONS.map((r,i)=>({
+      label:r.replace('R.',''),data:[RS[r].ene,RS[r].feb,RS[r].mar],
+      borderColor:evolColors[i],backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2
+    }))},
+    options:{...cd}
+  });
+
+  dc('cBarStack');
+  const ds2=[];
+  const stackColors={pa:'#c8000a',mtc:'#e67e00',lti:'#1a7a3a',sif:'#1a1a1a'};
+  ['ene','feb','mar'].forEach((m,mi)=>{
+    ['pa','mtc','lti','sif'].forEach(t=>{
+      const base=stackColors[t];
+      const alpha=MES==='all'?(mi===0?.9:mi===1?.65:.4):(MES===m?.9:.15);
+      const hex=Math.round(alpha*255).toString(16).padStart(2,'0');
+      ds2.push({label:`${['Ene','Feb','Mar'][mi]}-${t==='sif'?'SIF/SIFp':t.toUpperCase()}`,data:REGIONS.map(r=>D.filter(d=>d.region===r).reduce((s,d)=>s+d[`${m}_${t}`],0)),backgroundColor:base+hex,borderRadius:2,stack:`s${mi}`});
+    });
+  });
+  charts['cBarStack']=new Chart(document.getElementById('cBarStack'),{
+    type:'bar',data:{labels:REGIONS.map(r=>r.replace('R.','')),datasets:ds2},
+    options:{...cd,plugins:{legend:{display:false}},scales:{x:{stacked:true,...cd.scales.x},y:{stacked:true,...cd.scales.y}}}
+  });
+}
+
+function hC(v,mx){
+  if(v===0)return 'h0';
+  const p=v/mx;
+  return p<.15?'h1':p<.3?'h2':p<.5?'h3':p<.7?'h4':'h5';
+}
+function buildHM(cid,rows,cols,getFn){
+  const vals=rows.flatMap(r=>cols.map(c=>getFn(r,c)));
+  const mx=Math.max(...vals,1);
+  let h='<table class="heatmap-table"><thead><tr><th style="text-align:left">Región</th>';
+  cols.forEach(c=>{h+=`<th>${c}</th>`});
+  h+='<th>Total</th></tr></thead><tbody>';
+  rows.forEach(r=>{
+    h+=`<tr><td class="row-label">${r}</td>`;
+    let t=0;
+    cols.forEach(c=>{const v=getFn(r,c);t+=v;h+=`<td class="${hC(v,mx)}">${v||'—'}</td>`});
+    h+=`<td class="${hC(t,mx*cols.length/2)}" style="font-weight:800">${t}</td></tr>`;
+  });
+  h+='</tbody></table>';
+  document.getElementById(cid).innerHTML=h;
+}
+
+function updateHeatmaps(){
+  const RS=getRS();
+  const SR=[...REGIONS].sort((a,b)=>RS[b].total-RS[a].total);
+  buildHM('hmRegMes',SR,['Enero','Febrero','Marzo'],(r,m)=>RS[r][{Enero:'ene',Febrero:'feb',Marzo:'mar'}[m]]);
+  buildHM('hmRegTipo',SR,['PA','MTC','LTI','SIF/SIFp'],(r,t)=>RS[r][t==='SIF/SIFp'?'sif':t.toLowerCase()]);
+}
+
+let rSort={key:'total',asc:false};
+function renderRanking(){
+  const reg=document.getElementById('fReg').value;
+  const zona=document.getElementById('fZona').value;
+  const min=parseInt(document.getElementById('fMin').value)||0;
+  const search=document.getElementById('fSearch').value.toLowerCase();
+  let f=D.filter(d=>(!reg||d.region===reg)&&(!zona||d.zona_reparto===zona)&&(!search||d.coordinador.toLowerCase().includes(search)));
+  const mx=Math.max(...f.map(d=>val(d,'total')),1);
+  f=f.filter(d=>val(d,'total')>=min);
+
+  const sortFns={total:(d)=>val(d,'total'),ene:(d)=>d.ene_total,feb:(d)=>d.feb_total,mar:(d)=>d.mar_total,name:(d)=>d.coordinador,region:(d)=>d.region};
+  f.sort((a,b)=>{
+    const fa=sortFns[rSort.key]||sortFns.total;
+    const va=fa(a),vb=fa(b);
+    if(typeof va==='string') return rSort.asc?va.localeCompare(vb):vb.localeCompare(va);
+    return rSort.asc?va-vb:vb-va;
+  });
+
+  let h=`<table class="ranking-table"><thead><tr>
+    <th style="width:36px">#</th>
+    <th onclick="sR('name')">Coordinador ↕</th>
+    <th onclick="sR('region')">Región ↕</th>
+    <th>Zona</th>
+    <th onclick="sR('ene')" style="text-align:center">Ene ↕</th>
+    <th onclick="sR('feb')" style="text-align:center">Feb ↕</th>
+    <th onclick="sR('mar')" style="text-align:center">Mar ↕</th>
+    <th onclick="sR('total')" style="text-align:center">Período ↕</th>
+    <th>Tipos</th>
+    <th>Nivel</th>
+  </tr></thead><tbody>`;
+
+  f.forEach((d,i)=>{
+    const pv=val(d,'total');
+    const pct=Math.round((pv/mx)*100);
+    const semCls=semTag(pv,mx);
+    const semLabels={'sem-verde':'BAJO','sem-amarillo':'MEDIO','sem-rojo':'ALTO','sem-negro':'CRÍTICO','':'—'};
+    const numCls=i===0?'rank-num gold':i===1?'rank-num silver':i===2?'rank-num bronze':'rank-num';
+    const chips=[
+      val(d,'pa')?`<span class="chip chip-pa">PA:${val(d,'pa')}</span>`:'',
+      val(d,'mtc')?`<span class="chip chip-mtc">MTC:${val(d,'mtc')}</span>`:'',
+      val(d,'lti')?`<span class="chip chip-lti">LTI:${val(d,'lti')}</span>`:'',
+      val(d,'sif')?`<span class="chip chip-sif">SIF/SIFp:${val(d,'sif')}</span>`:''
+    ].join('');
+    const eneBold=MES==='ene'?'font-weight:800;color:#c8000a':'';
+    const febBold=MES==='feb'?'font-weight:800;color:#c8000a':'';
+    const marBold=MES==='mar'?'font-weight:800;color:#c8000a':'';
+    h+=`<tr>
+      <td class="${numCls}">${i+1}</td>
+      <td class="rank-name">${d.coordinador.trim()}</td>
+      <td class="rank-region">${d.region}</td>
+      <td class="rank-region">${d.zona_reparto}</td>
+      <td style="text-align:center;${eneBold}">${d.ene_total||'—'}</td>
+      <td style="text-align:center;${febBold}">${d.feb_total||'—'}</td>
+      <td style="text-align:center;${marBold}">${d.mar_total||'—'}</td>
+      <td style="text-align:center">
+        <span class="rank-total" style="color:${pv===0?'#bbb':pv>=6?'#c8000a':pv>=3?'#e67e00':'#1a7a3a'}">${pv}</span>
+        <div class="bar-mini"><div class="${pv>=6?'bar-fill-rojo':pv>=3?'bar-fill-amarillo':'bar-fill-verde'}" style="width:${pct}%"></div></div>
+      </td>
+      <td>${chips||'<span style="color:#bbb;font-size:.68rem">sin incidentes</span>'}</td>
+      <td>${semCls?`<span class="semaforo ${semCls}">${semLabels[semCls]}</span>`:''}</td>
+    </tr>`;
+  });
+  document.getElementById('rankTable').innerHTML=h+'</tbody></table>';
+}
+
+function sR(k){rSort={key:k,asc:rSort.key===k?!rSort.asc:false};renderRanking();}
+
+// Reincidentes
+const REIN=D.filter(d=>d.ene_total>0&&d.feb_total>0&&d.mar_total>0);
+const g=document.getElementById('reinGrid');
+if(!REIN.length){g.innerHTML='<div class="empty">No hay reincidentes en los 3 meses.</div>';}
+else{
+  REIN.forEach(d=>{
+    const chips=[d.ene_pa+d.feb_pa+d.mar_pa?`<span class="chip chip-pa">PA:${d.ene_pa+d.feb_pa+d.mar_pa}</span>`:'',d.ene_mtc+d.feb_mtc+d.mar_mtc?`<span class="chip chip-mtc">MTC:${d.ene_mtc+d.feb_mtc+d.mar_mtc}</span>`:'',d.ene_lti+d.feb_lti+d.mar_lti?`<span class="chip chip-lti">LTI:${d.ene_lti+d.feb_lti+d.mar_lti}</span>`:'',d.ene_sif+d.feb_sif+d.mar_sif?`<span class="chip chip-sif">SIF/SIFp:${d.ene_sif+d.feb_sif+d.mar_sif}</span>`:''].join('');
+    g.innerHTML+=`<div class="reincidente-card">
+      <span class="warn-badge">⚠ Reincidente</span>
+      <div class="rc-name">${d.coordinador.trim()}</div>
+      <div class="rc-region">${d.region} · ${d.zona_reparto} · ${d.zona_pacifico}</div>
+      <div class="rc-months">
+        <div class="rc-month"><div class="rc-month-label">Enero</div><div class="rc-month-val">${d.ene_total}</div></div>
+        <div class="rc-month"><div class="rc-month-label">Febrero</div><div class="rc-month-val">${d.feb_total}</div></div>
+        <div class="rc-month"><div class="rc-month-label">Marzo</div><div class="rc-month-val">${d.mar_total}</div></div>
+      </div>
+      <div class="rc-total-row">
+        <span class="rc-total-label">Total acumulado (3 meses)</span>
+        <span class="rc-total-val">${d.total}</span>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:4px;flex-wrap:wrap">${chips}</div>
+    </div>`;
+  });
+}
+
+refreshAll();
+</script>
+</body>
+</html>
