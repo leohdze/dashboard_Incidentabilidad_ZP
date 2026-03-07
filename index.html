@@ -32,8 +32,8 @@
   --negro: #1a1a1a;
 
   /* Tipos */
-  --pa:  #e8000d;
-  --mtc: #e67e00;
+  --pa:  #1a7a3a;  /* PA = verde (menos riesgo) */
+  --mtc: #e67e00;  /* MTC = naranja */
   --lti: #1a7a3a;
   --sif: #1a1a1a;
 
@@ -43,121 +43,118 @@
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--text); font-family:'Barlow', sans-serif; min-height:100vh; font-size:14px; }
+body { background:var(--bg); color:var(--text); font-family:'Barlow', sans-serif; min-height:100vh; font-size:clamp(13px,1.2vw,15px); }
 
 /* ── HEADER ── */
 header {
-  background: var(--negro);
-  color: #fff;
-  padding: 0 36px;
+  background: var(--negro); color: #fff;
+  padding: 0 clamp(12px,3vw,36px);
   display: flex; align-items: center; justify-content: space-between;
-  height: 72px; border-bottom: 3px solid var(--rojo);
+  height: clamp(54px,7vh,72px); border-bottom: 3px solid var(--rojo);
+  flex-wrap: wrap; gap: 8px;
 }
 .logo {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.5rem; font-weight: 900; letter-spacing: .02em;
-  text-transform: uppercase; display: flex; align-items: center; gap: 14px;
+  font-size: clamp(1rem,2vw,1.4rem); font-weight: 900; letter-spacing: .02em;
+  text-transform: uppercase; display: flex; align-items: center; gap: 10px;
 }
 .logo-pill {
   background: var(--rojo); color: #fff;
   padding: 4px 10px; border-radius: 3px;
-  font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+  font-size: .65rem; font-weight: 700; letter-spacing: .1em;
 }
-.header-meta { display:flex; gap:10px; align-items:center; }
+.header-meta { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
 .hbadge {
-  font-size: .68rem; font-weight: 600; letter-spacing: .06em;
-  padding: 4px 10px; border-radius: 3px;
+  font-size: clamp(.58rem,.7vw,.68rem); font-weight: 600; letter-spacing: .05em;
+  padding: 3px 8px; border-radius: 3px;
   background: rgba(255,255,255,.1); color: rgba(255,255,255,.8);
   text-transform: uppercase;
 }
 
-/* ── MES FILTER BAR ── */
+/* ── FILTER BAR ── */
 .month-bar {
   background: var(--surface); border-bottom: 1px solid var(--border);
-  padding: 10px 36px; display: flex; align-items: center; gap: 14px;
+  padding: 8px clamp(12px,3vw,36px); display: flex; align-items: center;
+  gap: 10px; flex-wrap: wrap;
   position: sticky; top: 0; z-index: 200; box-shadow: var(--shadow);
 }
 .month-label {
-  font-size: .72rem; font-weight: 700; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: .08em; white-space: nowrap;
+  font-size: clamp(.65rem,.8vw,.75rem); font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .07em; white-space: nowrap;
 }
-.month-pills { display: flex; gap: 4px; }
+.month-pills { display: flex; gap: 3px; flex-wrap: wrap; }
 .mpill {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
-  padding: 5px 18px; border-radius: 3px; cursor: pointer;
+  font-size: clamp(.72rem,.9vw,.82rem); font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  padding: 4px 14px; border-radius: 3px; cursor: pointer;
   border: 1.5px solid var(--border-strong);
   background: var(--surface2); color: var(--text-muted);
   transition: all .15s;
 }
 .mpill:hover { background: var(--bg); color: var(--text); border-color: var(--text-muted); }
-.mpill.active {
-  background: var(--negro); color: #fff; border-color: var(--negro);
-  box-shadow: 0 2px 8px rgba(0,0,0,.2);
-}
+.mpill.active { background: var(--negro); color: #fff; border-color: var(--negro); box-shadow: 0 2px 8px rgba(0,0,0,.2); }
 .mpill.active-all.active { background: var(--rojo); border-color: var(--rojo); }
 .mes-tag {
-  margin-left: auto; font-size: .7rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .08em; padding: 4px 12px; border-radius: 3px;
+  margin-left: auto; font-size: clamp(.62rem,.75vw,.72rem); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .07em; padding: 3px 10px; border-radius: 3px;
   background: var(--rojo-bg); color: var(--rojo); border: 1px solid var(--rojo-border);
+  white-space: nowrap;
 }
 
 /* ── NAV ── */
 nav {
   background: var(--surface); border-bottom: 2px solid var(--border);
-  padding: 0 36px; display: flex; gap: 0;
+  padding: 0 clamp(12px,3vw,36px); display: flex; gap: 0; overflow-x: auto;
   position: sticky; top: 45px; z-index: 100;
 }
 .tab {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
-  padding: 12px 20px; cursor: pointer; border: none; background: transparent;
+  font-size: clamp(.78rem,1vw,.9rem); font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  padding: 10px clamp(10px,1.5vw,20px); cursor: pointer; border: none; background: transparent;
   color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px;
-  transition: all .15s;
+  transition: all .15s; white-space: nowrap;
 }
 .tab:hover { color: var(--text); background: var(--bg); }
 .tab.active { color: var(--rojo); border-bottom-color: var(--rojo); background: transparent; }
 
 /* ── PAGES ── */
-.page { display:none; padding: 24px 36px 56px; }
+.page { display:none; padding: clamp(14px,2vw,24px) clamp(12px,3vw,36px) 40px; }
 .page.active { display: block; }
 
 /* ── KPIs ── */
-.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 8px; }
 .kpi {
   background: var(--surface); border-radius: var(--radius);
   border: 1px solid var(--border); box-shadow: var(--shadow);
-  padding: 18px 20px; position: relative; overflow: hidden;
+  padding: 8px 10px; position: relative; overflow: hidden;
   transition: box-shadow .2s;
 }
 .kpi:hover { box-shadow: var(--shadow-md); }
 .kpi-stripe { position:absolute; top:0; left:0; right:0; height:4px; }
 .kpi.pa .kpi-stripe { background: var(--pa); }
 .kpi.mtc .kpi-stripe { background: var(--mtc); }
-.kpi.lti .kpi-stripe { background: var(--verde); }
+.kpi.lti .kpi-stripe { background: var(--rojo); }
 .kpi.sif .kpi-stripe { background: var(--negro); }
 .kpi-label {
-  font-size: .68rem; font-weight: 700; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px;
+  font-size: clamp(.55rem,.62vw,.62rem); font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px;
 }
 .kpi-value {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 2.8rem; font-weight: 900; line-height: 1; color: var(--text);
+  font-size: clamp(1.3rem,2.2vw,1.7rem); font-weight: 900; line-height: 1; color: var(--text);
 }
 .kpi.pa .kpi-value  { color: var(--pa); }
 .kpi.mtc .kpi-value { color: var(--mtc); }
-.kpi.lti .kpi-value { color: var(--verde); }
+.kpi.lti .kpi-value { color: var(--rojo); }
 .kpi.sif .kpi-value { color: var(--negro); }
-.kpi-pct {
-  font-size: .75rem; font-weight: 600; margin-top: 6px; color: var(--text-muted);
-}
-.kpi-name { font-size: .72rem; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+.kpi-pct { font-size: clamp(.55rem,.62vw,.6rem); font-weight: 600; margin-top: 1px; color: var(--text-muted); }
+.kpi-name { font-size: clamp(.62rem,.75vw,.72rem); font-weight: 500; color: var(--text-muted); margin-top: 2px; }
 
-/* ── SEMÁFORO (clasificación automática) ── */
+/* ── SEMÁFORO ── */
 .semaforo {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 9px; border-radius: 20px; font-size: .68rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .05em;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 20px; font-size: clamp(.6rem,.72vw,.68rem); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .04em;
 }
 .sem-verde  { background: var(--verde-bg);   color: var(--verde);   border: 1px solid var(--verde-border); }
 .sem-amarillo { background: var(--amarillo-bg); color: var(--amarillo); border: 1px solid var(--amarillo-border); }
@@ -167,147 +164,158 @@ nav {
 /* ── SUMMARY BAR ── */
 .summary-bar {
   background: var(--negro); color: #fff;
-  border-radius: var(--radius); padding: 14px 24px;
-  display: flex; gap: 0; align-items: stretch; margin-bottom: 18px;
-  overflow: hidden;
+  border-radius: var(--radius); padding: 8px clamp(10px,1.5vw,16px);
+  display: flex; gap: 0; align-items: stretch; margin-bottom: 10px;
+  overflow-x: auto; flex-wrap: nowrap;
 }
 .sb-item {
-  display: flex; flex-direction: column; gap: 3px;
-  padding: 0 28px; border-right: 1px solid rgba(255,255,255,.12);
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 0 clamp(14px,2vw,24px); border-right: 1px solid rgba(255,255,255,.12);
+  flex-shrink: 0;
 }
 .sb-item:first-child { padding-left: 0; }
 .sb-item:last-child { border-right: none; }
-.sb-label { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.5); }
-.sb-value { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; }
+.sb-label { font-size: clamp(.52rem,.6vw,.58rem); font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: rgba(255,255,255,.5); }
+.sb-value { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(.82rem,1.1vw,.95rem); font-weight: 700; color: #fff; }
 .sb-value.red { color: #ff6b6b; }
 
 /* ── CHART BOXES ── */
-.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
 .chart-box {
   background: var(--surface); border-radius: var(--radius);
-  border: 1px solid var(--border); box-shadow: var(--shadow); padding: 20px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+  padding: clamp(8px,1vw,12px); min-width: 0;
 }
 .chart-box.full { grid-column: 1/-1; }
 .chart-box.third { grid-column: span 1; }
-.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 .chart-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: .85rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
-  color: var(--text-2); margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
+  font-size: clamp(.75rem,.95vw,.88rem); font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--text-2); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 7px;
 }
-.chart-title-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: var(--rojo); flex-shrink: 0;
-}
+.chart-title-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--rojo); flex-shrink: 0; }
 
 /* ── HEATMAP ── */
-.heatmap-table { width:100%; border-collapse:collapse; font-size:.72rem; }
+.heatmap-wrap { overflow-x: auto; }
+.heatmap-table { width:100%; border-collapse:collapse; font-size:clamp(.68rem,.85vw,.8rem); }
 .heatmap-table th {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
-  color: var(--text-muted); padding: 6px 10px; text-align: center;
-  border-bottom: 2px solid var(--border);
+  font-size: clamp(.68rem,.82vw,.78rem); font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--text-muted); padding: 6px 8px; text-align: center;
+  border-bottom: 2px solid var(--border); white-space: nowrap;
 }
-.heatmap-table td { padding: 7px 10px; text-align: center; font-weight: 700; border-bottom: 1px solid var(--border); }
-.heatmap-table .row-label { text-align: left; color: var(--text-2); font-weight: 600; font-size: .72rem; }
-/* Niveles de calor con semáforo */
+.heatmap-table td { padding: 7px 8px; text-align: center; font-weight: 700; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.heatmap-table .row-label { text-align: left; color: var(--text-2); font-weight: 600; font-size: clamp(.68rem,.82vw,.78rem); }
 .h0 { color: var(--text-light); background: var(--surface2); }
-.h1 { background: #27ae60; color: #fff; font-weight:800; }   /* verde vivo */
-.h2 { background: #2ecc71; color: #fff; font-weight:800; }   /* verde claro */
-.h3 { background: #f1c40f; color: #1a1a1a; font-weight:800; } /* amarillo vivo */
-.h4 { background: #e67e22; color: #fff; font-weight:800; }   /* naranja-rojo */
-.h5 { background: #e8000d; color: #fff; font-weight:800; }   /* rojo vivo crítico */
+.h1 { background: #27ae60; color: #fff; font-weight:800; }
+.h2 { background: #2ecc71; color: #fff; font-weight:800; }
+.h3 { background: #f1c40f; color: #1a1a1a; font-weight:800; }
+.h4 { background: #e67e22; color: #fff; font-weight:800; }
+.h5 { background: #e8000d; color: #fff; font-weight:800; }
 
 /* ── RANKING ── */
-.ranking-controls {
-  display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center;
-}
+.ranking-controls { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
 .ranking-controls select,
 .ranking-controls input {
   background: var(--surface); border: 1.5px solid var(--border);
-  color: var(--text); padding: 7px 12px; border-radius: var(--radius);
-  font-family: 'Barlow', sans-serif; font-size: .78rem; font-weight: 500;
+  color: var(--text); padding: 6px 10px; border-radius: var(--radius);
+  font-family: 'Barlow', sans-serif; font-size: clamp(.72rem,.85vw,.8rem); font-weight: 500;
   outline: none; cursor: pointer;
 }
 .ranking-controls select:focus,
 .ranking-controls input:focus { border-color: var(--rojo); }
-
-.ranking-table { width:100%; border-collapse:collapse; }
+.rank-wrap { overflow-x: auto; }
+.ranking-table { width:100%; border-collapse:collapse; min-width: 700px; }
 .ranking-table thead th {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
-  color: var(--text-muted); padding: 8px 10px; text-align: left;
-  border-bottom: 2px solid var(--border); cursor: pointer; user-select: none;
-  white-space: nowrap;
+  font-size: clamp(.68rem,.82vw,.78rem); font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--text-muted); padding: 8px 8px; text-align: left;
+  border-bottom: 2px solid var(--border); cursor: pointer; user-select: none; white-space: nowrap;
 }
 .ranking-table thead th:hover { color: var(--text); }
-.ranking-table tbody td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.ranking-table tbody td { padding: 7px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
 .ranking-table tbody tr:hover td { background: var(--surface2); }
-.rank-num {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 800; font-size: .9rem; color: var(--text-light); min-width: 28px;
-}
+.rank-num { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.9rem; color:var(--text-light); min-width:24px; }
 .rank-num.gold   { color: #b8860b; }
 .rank-num.silver { color: #777; }
 .rank-num.bronze { color: #8b5e3c; }
-.rank-name { font-weight: 600; font-size: .8rem; color: var(--text); }
-.rank-region { font-size: .7rem; color: var(--text-muted); font-weight: 500; }
-.rank-total {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900; font-size: 1.1rem;
-}
-.bar-mini { height: 4px; background: var(--border); border-radius: 2px; margin-top: 4px; }
-.bar-fill-rojo    { height:4px; background:var(--rojo); border-radius:2px; }
-.bar-fill-verde   { height:4px; background:var(--verde); border-radius:2px; }
-.bar-fill-amarillo{ height:4px; background: #e6a800; border-radius:2px; }
-
-/* chips */
-.chip { display:inline-block; padding:2px 7px; border-radius:3px; font-size:.65rem; font-weight:700; margin:1px; }
-.chip-pa  { background:rgba(232,0,13,.1);  color:var(--pa); }
+.rank-name { font-weight: 600; font-size: clamp(.72rem,.88vw,.82rem); color: var(--text); }
+.rank-region { font-size: clamp(.62rem,.75vw,.7rem); color: var(--text-muted); font-weight: 500; }
+.rank-total { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.05rem; }
+.bar-mini { height: 3px; background: var(--border); border-radius: 2px; margin-top: 3px; }
+.bar-fill-rojo    { height:3px; background:var(--rojo); border-radius:2px; }
+.bar-fill-verde   { height:3px; background:var(--verde); border-radius:2px; }
+.bar-fill-amarillo{ height:3px; background:#e6a800; border-radius:2px; }
+.chip { display:inline-block; padding:2px 6px; border-radius:3px; font-size:clamp(.58rem,.7vw,.65rem); font-weight:700; margin:1px; }
+.chip-pa  { background:rgba(26,122,58,.1);  color:var(--pa); }
 .chip-mtc { background:rgba(230,126,0,.1); color:var(--mtc); }
-.chip-lti { background:rgba(26,122,58,.1); color:var(--verde); }
+.chip-lti { background:rgba(200,0,10,.1);   color:var(--rojo); }
 .chip-sif { background:rgba(26,26,26,.1);  color:var(--negro); }
 
 /* ── REINCIDENTES ── */
-.reincidentes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+.reincidentes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
 .reincidente-card {
   background: var(--surface); border-radius: var(--radius);
   border: 1px solid var(--rojo-border); box-shadow: var(--shadow);
-  padding: 20px; position: relative;
-  border-top: 4px solid var(--rojo);
+  padding: clamp(14px,2vw,18px); position: relative; border-top: 4px solid var(--rojo);
 }
-.rc-name { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1.1rem; color:var(--text); margin-bottom:2px; }
-.rc-region { font-size:.72rem; color:var(--text-muted); font-weight:500; margin-bottom:14px; }
-.rc-months { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-.rc-month { background:var(--surface2); border-radius:4px; padding:10px; text-align:center; border:1px solid var(--border); }
-.rc-month-label { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); }
-.rc-month-val { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.8rem; color:var(--rojo); margin-top:2px; }
-.rc-total-row { margin-top:12px; padding-top:10px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-.rc-total-label { font-size:.68rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; }
-.rc-total-val { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.4rem; color:var(--rojo); }
+.rc-name { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:clamp(.95rem,1.3vw,1.1rem); color:var(--text); margin-bottom:2px; }
+.rc-region { font-size:clamp(.62rem,.75vw,.72rem); color:var(--text-muted); font-weight:500; margin-bottom:12px; }
+.rc-months { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+.rc-month { background:var(--surface2); border-radius:4px; padding:8px; text-align:center; border:1px solid var(--border); }
+.rc-month-label { font-size:clamp(.58rem,.7vw,.65rem); font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); }
+.rc-month-val { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:clamp(1.4rem,2.5vw,1.8rem); color:var(--rojo); margin-top:2px; }
+.rc-total-row { margin-top:10px; padding-top:8px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.rc-total-label { font-size:clamp(.6rem,.72vw,.68rem); font-weight:700; color:var(--text-muted); text-transform:uppercase; }
+.rc-total-val { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:clamp(1.1rem,1.8vw,1.4rem); color:var(--rojo); }
 .warn-badge {
-  position:absolute; top:16px; right:16px;
+  position:absolute; top:12px; right:12px;
   background:var(--rojo-bg); color:var(--rojo);
   border:1px solid var(--rojo-border); border-radius:3px;
-  font-size:.62rem; font-weight:700; padding:2px 7px; text-transform:uppercase;
+  font-size:.6rem; font-weight:700; padding:2px 6px; text-transform:uppercase;
 }
 
 /* ── LEYENDA SEMÁFORO ── */
 .semaforo-leyenda {
-  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-  padding:10px 16px; background:var(--surface2); border-radius:var(--radius);
-  border:1px solid var(--border); margin-bottom:14px;
-  font-size:.68rem; font-weight:600;
+  display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+  padding:8px 14px; background:var(--surface2); border-radius:var(--radius);
+  border:1px solid var(--border); margin-bottom:12px;
+  font-size:clamp(.62rem,.75vw,.7rem); font-weight:600;
 }
 .semaforo-leyenda span { display:flex; align-items:center; gap:5px; }
-.sl-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.sl-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
 
 /* ── SECTION HEADER ── */
-.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-.section-title { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--text); }
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.section-title { font-family:'Barlow Condensed',sans-serif; font-size:clamp(.95rem,1.3vw,1.1rem); font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--text); }
 
 /* ── UTILIDADES ── */
-.divider { height:1px; background:var(--border); margin:6px 0 18px; }
+.divider { height:1px; background:var(--border); margin:6px 0 14px; }
+.empty { text-align:center; padding:36px; color:var(--text-muted); font-size:.84rem; }
+
+/* ── MEDIA QUERIES ── */
+@media (max-width: 600px) {
+  .kpi-grid { grid-template-columns: repeat(2,1fr); }
+  .charts-row { grid-template-columns: 1fr; }
+  .three-col  { grid-template-columns: 1fr; }
+  .header-meta .hbadge:nth-child(n+3) { display: none; }
+  nav { top: 40px; }
+  .month-bar { flex-wrap: wrap; gap: 6px; }
+  .mes-tag, #regionTag { margin-left: 0; }
+}
+@media (max-width: 600px) {
+  .kpi-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
+  header { padding: 0 12px; height: auto; min-height: 54px; padding: 8px 12px; }
+  .logo { font-size: .95rem; }
+  .logo img { width: 38px !important; height: 38px !important; }
+  nav { padding: 0 8px; }
+  .tab { padding: 8px 10px; font-size: .75rem; }
+  .page { padding: 12px 10px 32px; }
+  .summary-bar { padding: 8px 12px; }
+  .sb-item { padding: 0 12px; }
+}
 .empty { text-align:center; padding:48px; color:var(--text-muted); font-size:.82rem; }
 </style>
 </head>
@@ -329,11 +337,8 @@ nav {
 <!-- FILTRO MES -->
 <div class="month-bar">
   <span class="month-label">Período:</span>
-  <div class="month-pills">
-    <button class="mpill active-all active" onclick="setMes('all',this)">▪ Todos</button>
-    <button class="mpill" onclick="setMes('ene',this)">Enero</button>
-    <button class="mpill" onclick="setMes('feb',this)">Febrero</button>
-    <button class="mpill" onclick="setMes('mar',this)">Marzo</button>
+  <div class="month-pills" id="mesPillsContainer">
+    <!-- generado dinámicamente por buildMesPills() -->
   </div>
   <div style="width:1px;background:var(--border);margin:0 6px;align-self:stretch;"></div>
   <span class="month-label">Región:</span>
@@ -350,8 +355,18 @@ nav {
     <option>R. Tenango</option>
     <option>R. Tlaxcala</option>
   </select>
+  <div style="width:1px;background:var(--border);margin:0 6px;align-self:stretch;"></div>
+  <span class="month-label">Incidente:</span>
+  <div class="month-pills">
+    <button class="mpill active-all active" id="tpill-all" onclick="setTodosTipos()">▪ Todos</button>
+    <button class="mpill tipo-pill" id="tpill-lti" onclick="toggleTipo('lti')" style="border-color:#c8000a;color:#c8000a">LTI</button>
+    <button class="mpill tipo-pill" id="tpill-sif" onclick="toggleTipo('sif')" style="border-color:#1a1a1a;color:#1a1a1a">SIF/SIFp</button>
+    <button class="mpill tipo-pill" id="tpill-mtc" onclick="toggleTipo('mtc')" style="border-color:#e67e00;color:#e67e00">MTC</button>
+    <button class="mpill tipo-pill" id="tpill-pa"  onclick="toggleTipo('pa')"  style="border-color:#c8000a;color:#c8000a">PA</button>
+  </div>
   <span class="mes-tag" id="mesTag">Acumulado ENE–MAR</span>
   <span class="mes-tag" id="regionTag" style="display:none;background:#e8f0fe;color:#1a56db;border-color:#a4c2f7;"></span>
+  <span class="mes-tag" id="tipoTag"   style="display:none;background:#f0faf4;color:#1a7a3a;border-color:#a3d4b0;"></span>
 </div>
 
 <!-- NAV -->
@@ -366,28 +381,28 @@ nav {
 <!-- RESUMEN -->
 <div class="page active" id="page-resumen">
   <div class="kpi-grid">
-    <div class="kpi pa"><div class="kpi-stripe"></div><div class="kpi-label">Primer Auxilio</div><div class="kpi-value" id="kpi-pa">—</div><div class="kpi-pct" id="kpi-pa-pct"></div><div class="kpi-name">PA</div></div>
-    <div class="kpi mtc"><div class="kpi-stripe"></div><div class="kpi-label">Tratamiento Médico</div><div class="kpi-value" id="kpi-mtc">—</div><div class="kpi-pct" id="kpi-mtc-pct"></div><div class="kpi-name">MTC</div></div>
-    <div class="kpi lti"><div class="kpi-stripe"></div><div class="kpi-label">Incidente Tiempo Perdido</div><div class="kpi-value" id="kpi-lti">—</div><div class="kpi-pct" id="kpi-lti-pct"></div><div class="kpi-name">LTI</div></div>
-    <div class="kpi sif"><div class="kpi-stripe"></div><div class="kpi-label">Alto Potencial</div><div class="kpi-value" id="kpi-sif">—</div><div class="kpi-pct" id="kpi-sif-pct"></div><div class="kpi-name">SIF/SIFp</div></div>
+    <div class="kpi pa"><div class="kpi-stripe"></div><div class="kpi-label">🟥 Primer Auxilio</div><div class="kpi-value" id="kpi-pa">—</div><div class="kpi-pct" id="kpi-pa-pct"></div></div>
+    <div class="kpi mtc"><div class="kpi-stripe"></div><div class="kpi-label">🟧 Tratamiento Médico</div><div class="kpi-value" id="kpi-mtc">—</div><div class="kpi-pct" id="kpi-mtc-pct"></div></div>
+    <div class="kpi lti"><div class="kpi-stripe"></div><div class="kpi-label">Incidente Tiempo Perdido</div><div class="kpi-value" id="kpi-lti">—</div><div class="kpi-pct" id="kpi-lti-pct"></div></div>
+    <div class="kpi sif"><div class="kpi-stripe"></div><div class="kpi-label">⚫ SIF / SIFp</div><div class="kpi-value" id="kpi-sif">—</div><div class="kpi-pct" id="kpi-sif-pct"></div></div>
   </div>
   <div class="summary-bar" id="summaryBar"></div>
   <div class="charts-row">
-    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Incidentes por Región</div><canvas id="cRegion" height="210"></canvas></div>
-    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Distribución por Tipo</div><canvas id="cDonut" height="210"></canvas></div>
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Incidentes por Región</div><canvas id="cRegion" height="155"></canvas></div>
+    <div class="chart-box" style="display:flex;flex-direction:column;"><div class="chart-title"><span class="chart-title-dot"></span>Distribución por Tipo</div><div style="flex:1;display:flex;align-items:center;justify-content:center;max-height:165px;"><canvas id="cDonut" height="150"></canvas></div></div>
   </div>
   <div class="charts-row">
-    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Almacén vs Reparto por Región</div><canvas id="cAlmRep" height="210"></canvas></div>
-    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Evolución Mensual por Tipo</div><canvas id="cEvol" height="210"></canvas></div>
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Almacén vs Reparto por Región</div><canvas id="cAlmRep" height="155"></canvas></div>
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Evolución Mensual por Tipo</div><canvas id="cEvol" height="155"></canvas></div>
   </div>
 </div>
 
 <!-- TENDENCIAS -->
 <div class="page" id="page-tendencias">
-  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Evolución Mensual por Región</div><canvas id="cRegEvol" height="110"></canvas></div></div>
+  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Evolución Mensual por Región</div><canvas id="cRegEvol" height="120"></canvas></div></div>
   <div class="charts-row">
-    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Top 10 Coordinadores del Período</div><canvas id="cTop10" height="250"></canvas></div>
-    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Almacén vs Reparto</div><canvas id="cAlmRepTend" height="250"></canvas></div>
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Top 10 Coordinadores del Período</div><canvas id="cTop10" height="200"></canvas></div>
+    <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Almacén vs Reparto</div><canvas id="cAlmRepTend" height="200"></canvas></div>
   </div>
 </div>
 
@@ -402,9 +417,9 @@ nav {
     <span><span class="sl-dot" style="background:#e67e22"></span> Alto (50–70%)</span>
     <span><span class="sl-dot" style="background:#e8000d"></span> Crítico (&gt;70%)</span>
   </div>
-  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Mapa de Calor: Región × Mes</div><div id="hmRegMes"></div></div></div>
-  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Mapa de Calor: Región × Tipo de Incidente</div><div id="hmRegTipo"></div></div></div>
-  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Composición por Tipo y Mes</div><canvas id="cBarStack" height="90"></canvas></div></div>
+  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Mapa de Calor: Región × Mes</div><div class="heatmap-wrap"><div id="hmRegMes"></div></div></div></div>
+  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Mapa de Calor: Región × Tipo de Incidente</div><div class="heatmap-wrap"><div id="hmRegTipo"></div></div></div></div>
+  <div class="charts-row"><div class="chart-box full"><div class="chart-title"><span class="chart-title-dot"></span>Composición por Tipo y Mes</div><canvas id="cBarStack" height="110"></canvas></div></div>
 </div>
 
 <!-- RANKING -->
@@ -425,7 +440,7 @@ nav {
     </select>
     <input type="text" id="fSearch" placeholder="🔍 Buscar coordinador..." oninput="renderRanking()" style="min-width:220px">
   </div>
-  <div id="rankTable"></div>
+  <div class="rank-wrap"><div id="rankTable"></div></div>
 </div>
 
 <!-- REINCIDENTES -->
@@ -446,7 +461,7 @@ const REGIONS=['R. Acapulco','R. Coecillo','R. Cuernavaca','R. Litos','R. Monta�
 // Escala de rojos para regiones
 const regColors=['#c8000a','#e6001a','#8b0006','#d42008','#ff3d3d','#a00010','#e63020','#cc1808','#b82010','#ff1a1a'];
 
-const typeColors={ pa:'#e8000d', mtc:'#e67e00', lti:'#1a7a3a', sif:'#1a1a1a' };
+const typeColors={ pa:'#1a7a3a', mtc:'#e67e00', lti:'#c8000a', sif:'#1a1a1a' };
 
 const cd = {
   plugins: { legend: { labels: { color:'#3d3d3d', font:{ family:"'Barlow',sans-serif", size:12, weight:'600' }}}},
@@ -456,32 +471,74 @@ const cd = {
   }
 };
 
-let MES = 'all';
+let MESES = new Set(); // vacío = todos
 let REG = '';
+let TIPOS = new Set(); // vacío = todos
 let charts = {};
 
-function setRegion(r) {
-  REG = r;
-  const tag = document.getElementById('regionTag');
-  if(r) {
-    tag.textContent = '📍 ' + r;
+function toggleTipo(t) {
+  if(TIPOS.has(t)) TIPOS.delete(t); else TIPOS.add(t);
+  // Si ninguno seleccionado, equivale a "todos"
+  updateTipoPills();
+  refreshAll();
+}
+function setTodosTipos() {
+  TIPOS.clear();
+  updateTipoPills();
+  refreshAll();
+}
+function updateTipoPills() {
+  const allBtn = document.getElementById('tpill-all');
+  const labels = {lti:'🟢 LTI', sif:'⚫ SIF/SIFp', mtc:'🟠 MTC', pa:'🔴 PA'};
+  const activeBg = {lti:'#c8000a', sif:'#1a1a1a', mtc:'#e67e00', pa:'#1a7a3a'};
+  // Todos
+  allBtn.classList.toggle('active', TIPOS.size === 0);
+  // Cada tipo
+  ['lti','sif','mtc','pa'].forEach(t => {
+    const btn = document.getElementById('tpill-'+t);
+    if(TIPOS.has(t)) {
+      btn.classList.add('active');
+      btn.style.background = activeBg[t];
+      btn.style.color = '#fff';
+      btn.style.borderColor = activeBg[t];
+    } else {
+      btn.classList.remove('active');
+      btn.style.background = '';
+      btn.style.color = activeBg[t] || '';
+      btn.style.borderColor = activeBg[t] || '';
+    }
+  });
+  // Tag resumen
+  const tag = document.getElementById('tipoTag');
+  if(TIPOS.size > 0) {
+    tag.textContent = [...TIPOS].map(t=>labels[t]).join(' + ');
     tag.style.display = 'inline-block';
   } else {
     tag.style.display = 'none';
   }
+}
+
+function setRegion(r) {
+  REG = r;
+  const tag = document.getElementById('regionTag');
+  if(r) { tag.textContent = '📍 ' + r; tag.style.display = 'inline-block'; }
+  else tag.style.display = 'none';
   refreshAll();
 }
 
-function DF() { return REG ? D.filter(d=>d.region===REG) : D; }
+// Filtra por región Y tipos seleccionados
+function DF() {
+  let d = REG ? D.filter(x=>x.region===REG) : D;
+  if(TIPOS.size > 0) d = d.filter(x => [...TIPOS].some(t => val(x, t) > 0));
+  return d;
+}
 function activeREGIONS() { return REG ? [REG] : REGIONS; }
 
 function val(d, type) {
-  if(MES === 'all') {
-    if(type==='total') return d.total;
-    return d[`ene_${type}`]+d[`feb_${type}`]+d[`mar_${type}`];
-  }
-  if(type==='total') return d[`${MES}_total`];
-  return d[`${MES}_${type}`];
+  const meses = MESES.size > 0 ? [...MESES] : ['ene','feb','mar'];
+  // total real = PA+MTC+LTI (SIF/SIFp es característica, no nivel separado)
+  if(type==='total') return meses.reduce((s,m)=>s+d[m+'_pa']+d[m+'_mtc']+d[m+'_lti'],0);
+  return meses.reduce((s,m)=>s+d[m+'_'+type],0);
 }
 
 function getRS() {
@@ -491,20 +548,35 @@ function getRS() {
     const r=rs[d.region]; if(!r)return;
     r.pa+=val(d,'pa'); r.mtc+=val(d,'mtc'); r.lti+=val(d,'lti'); r.sif+=val(d,'sif');
     r.total+=val(d,'total');
-    r.ene+=d.ene_total; r.feb+=d.feb_total; r.mar+=d.mar_total;
+    getMesesConDatos().forEach(m => {
+      if(MESES.size===0||MESES.has(m.key)) {
+        r.ene = m.key==='ene' ? (r.ene||0)+(d.ene_total||0) : (r.ene||0);
+        r.feb = m.key==='feb' ? (r.feb||0)+(d.feb_total||0) : (r.feb||0);
+        r.mar = m.key==='mar' ? (r.mar||0)+(d.mar_total||0) : (r.mar||0);
+      }
+    });
     if(d.zona_reparto==='Almacen') r.alm+=val(d,'total'); else r.rep+=val(d,'total');
   });
   return rs;
 }
 
 // Semáforo para totales de ranking
-function semTag(v, max) {
-  if(v===0) return '';
-  const p=v/max;
-  if(p<.15) return 'sem-verde';
-  if(p<.35) return 'sem-amarillo';
-  if(p<.65) return 'sem-rojo';
-  return 'sem-negro';
+// Clasificación por jerarquía absoluta de tipo más severo presente:
+// LTI (cualquier cantidad) → CRÍTICO ⚫
+// SIF sin LTI              → ALTO 🔴
+// MTC sin LTI ni SIF       → MEDIO 🟡
+// Solo PA                  → BAJO 🟢
+// rank=índice en la tabla ya ordenada por nivel (LTI→SIF→MTC→PA→total)
+// Top 5 = CRÍTICO. Del 6 en adelante: jerarquía fija por tipo más severo presente
+function semTag(v, max, d, mxLTI, mxSIF, mxMTC, mxPA, rank) {
+  if(v === 0 || !d) return '';
+  if(rank < 5) return 'sem-negro';   // CRÍTICO: top 5
+  const lv=val(d,'lti'), sv=val(d,'sif'), mv=val(d,'mtc'), av=val(d,'pa');
+  if(lv > 0) return 'sem-rojo';      // ALTO: tiene LTI pero no es top 5
+  if(sv > 0) return 'sem-rojo';      // ALTO: tiene SIF
+  if(mv > 0) return 'sem-amarillo';  // MEDIO: solo MTC
+  if(av > 0) return 'sem-verde';     // BAJO: solo PA
+  return '';
 }
 
 function showPage(id,el){
@@ -514,13 +586,88 @@ function showPage(id,el){
   el.classList.add('active');
 }
 
-function setMes(m, el) {
-  MES = m;
-  document.querySelectorAll('.mpill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  const labels = {all:'Acumulado ENE–MAR', ene:'Solo Enero', feb:'Solo Febrero', mar:'Solo Marzo'};
-  document.getElementById('mesTag').textContent = labels[m];
+// Catálogo completo de meses posibles en orden cronológico
+const MESES_CATALOG = [
+  {key:'ene', label:'Enero'},  {key:'feb', label:'Febrero'}, {key:'mar', label:'Marzo'},
+  {key:'abr', label:'Abril'},  {key:'may', label:'Mayo'},    {key:'jun', label:'Junio'},
+  {key:'jul', label:'Julio'},  {key:'ago', label:'Agosto'},  {key:'sep', label:'Septiembre'},
+  {key:'oct', label:'Octubre'},{key:'nov', label:'Noviembre'},{key:'dic', label:'Diciembre'}
+];
+
+// Detectar qué meses tienen datos reales en D
+function getMesesConDatos() {
+  return MESES_CATALOG.filter(m =>
+    D.some(d => (d[m.key+'_pa']||0)+(d[m.key+'_mtc']||0)+(d[m.key+'_lti']||0)+(d[m.key+'_sif']||0) > 0)
+  );
+}
+
+// Construir los botones de mes dinámicamente al iniciar
+function buildMesPills() {
+  const mesesActivos = getMesesConDatos();
+  const container = document.getElementById('mesPillsContainer');
+  // Botón "Todos"
+  const allBtn = document.createElement('button');
+  allBtn.className = 'mpill active-all active';
+  allBtn.id = 'mpill-all';
+  allBtn.textContent = '▪ Todos';
+  allBtn.onclick = setTodosMeses;
+  container.appendChild(allBtn);
+  // Un botón por cada mes con datos
+  mesesActivos.forEach(m => {
+    const btn = document.createElement('button');
+    btn.className = 'mpill mes-pill';
+    btn.id = 'mpill-' + m.key;
+    btn.textContent = m.label;
+    btn.onclick = () => toggleMes(m.key);
+    container.appendChild(btn);
+  });
+  // Actualizar el badge de resumen con el rango real
+  const tag = document.getElementById('mesTag');
+  if(mesesActivos.length > 0) {
+    const primero = mesesActivos[0].label.slice(0,3).toUpperCase();
+    const ultimo  = mesesActivos[mesesActivos.length-1].label.slice(0,3).toUpperCase();
+    tag.textContent = primero === ultimo ? primero : 'Acumulado ' + primero + '–' + ultimo;
+  }
+}
+
+function toggleMes(m) {
+  if(MESES.has(m)) MESES.delete(m); else MESES.add(m);
+  updateMesPills();
   refreshAll();
+}
+function setTodosMeses() {
+  MESES.clear();
+  updateMesPills();
+  refreshAll();
+}
+function updateMesPills() {
+  const mesesActivos = getMesesConDatos();
+  const allBtn = document.getElementById('mpill-all');
+  if(allBtn) allBtn.classList.toggle('active', MESES.size === 0);
+  mesesActivos.forEach(m => {
+    const btn = document.getElementById('mpill-' + m.key);
+    if(!btn) return;
+    if(MESES.has(m.key)) {
+      btn.classList.add('active');
+      btn.style.background = '#1a1a1a';
+      btn.style.color = '#fff';
+      btn.style.borderColor = '#1a1a1a';
+    } else {
+      btn.classList.remove('active');
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }
+  });
+  const tag = document.getElementById('mesTag');
+  if(MESES.size === 0) {
+    const primero = mesesActivos[0]?.label.slice(0,3).toUpperCase() || '';
+    const ultimo  = mesesActivos[mesesActivos.length-1]?.label.slice(0,3).toUpperCase() || '';
+    tag.textContent = primero === ultimo ? primero : 'Acumulado ' + primero + '–' + ultimo;
+  } else {
+    const labels = Object.fromEntries(MESES_CATALOG.map(m=>[m.key, m.label]));
+    tag.textContent = [...MESES].map(m=>labels[m]).join(' + ');
+  }
 }
 
 function refreshAll() {
@@ -533,19 +680,19 @@ function refreshAll() {
 }
 
 function updateKPIs() {
-  const pa=DF().reduce((s,d)=>s+val(d,'pa'),0);
+  const pa =DF().reduce((s,d)=>s+val(d,'pa'),0);
   const mtc=DF().reduce((s,d)=>s+val(d,'mtc'),0);
   const lti=DF().reduce((s,d)=>s+val(d,'lti'),0);
   const sif=DF().reduce((s,d)=>s+val(d,'sif'),0);
-  const tot=pa+mtc+lti+sif||1;
+  const tot=pa+mtc+lti||1; // total real sin contar SIF doble
   document.getElementById('kpi-pa').textContent=pa;
   document.getElementById('kpi-mtc').textContent=mtc;
   document.getElementById('kpi-lti').textContent=lti;
   document.getElementById('kpi-sif').textContent=sif;
-  document.getElementById('kpi-pa-pct').textContent=`${Math.round(pa/tot*100)}% del total`;
-  document.getElementById('kpi-mtc-pct').textContent=`${Math.round(mtc/tot*100)}% del total`;
-  document.getElementById('kpi-lti-pct').textContent=`${Math.round(lti/tot*100)}% del total`;
-  document.getElementById('kpi-sif-pct').textContent=`${Math.round(sif/tot*100)}% del total`;
+  document.getElementById('kpi-pa-pct').textContent=`${Math.round(pa/tot*100)}% de incidentes`;
+  document.getElementById('kpi-mtc-pct').textContent=`${Math.round(mtc/tot*100)}% de incidentes`;
+  document.getElementById('kpi-lti-pct').textContent=`${Math.round(lti/tot*100)}% de incidentes`;
+  document.getElementById('kpi-sif-pct').textContent=`${Math.round(sif/tot*100)}% con alto potencial`;
 }
 
 function updateSummary() {
@@ -556,8 +703,11 @@ function updateSummary() {
   const topReg=SR[0];
   const topCoord=[...DF()].sort((a,b)=>val(b,'total')-val(a,'total'))[0];
   const reinCount=getReinFiltered().length;
+  const sifTot=DF().reduce((s,d)=>s+val(d,'sif'),0);
+  const totReal=DF().reduce((s,d)=>s+val(d,'total'),0); // PA+MTC+LTI
   document.getElementById('summaryBar').innerHTML=`
-    <div class="sb-item"><span class="sb-label">Total período</span><span class="sb-value">${tot}</span></div>
+    <div class="sb-item"><span class="sb-label">Incidentes totales</span><span class="sb-value">${totReal}</span></div>
+    <div class="sb-item"><span class="sb-label">⚫ Con alto potencial</span><span class="sb-value" style="color:#ff6b6b">${sifTot} SIF/SIFp</span></div>
     <div class="sb-item"><span class="sb-label">Con incidentes</span><span class="sb-value">${conInc}</span></div>
     <div class="sb-item"><span class="sb-label">Sin incidentes</span><span class="sb-value">${148-conInc}</span></div>
     <div class="sb-item"><span class="sb-label">Región crítica</span><span class="sb-value red">${topReg} · ${RS[topReg].total}</span></div>
@@ -579,15 +729,33 @@ function updateCharts() {
     options:{...cd,plugins:{legend:{display:false}}}
   });
 
-  const pa=DF().reduce((s,d)=>s+val(d,'pa'),0);
-  const mtc=DF().reduce((s,d)=>s+val(d,'mtc'),0);
-  const lti=DF().reduce((s,d)=>s+val(d,'lti'),0);
-  const sif=DF().reduce((s,d)=>s+val(d,'sif'),0);
+  const pa2=DF().reduce((s,d)=>s+val(d,'pa'),0);
+  const mtc2=DF().reduce((s,d)=>s+val(d,'mtc'),0);
+  const lti2=DF().reduce((s,d)=>s+val(d,'lti'),0);
+  const sif2=DF().reduce((s,d)=>s+val(d,'sif'),0);
+  const tot2=pa2+mtc2+lti2||1;
   dc('cDonut');
   charts['cDonut']=new Chart(document.getElementById('cDonut'),{
     type:'doughnut',
-    data:{labels:['PA — Primer Auxilio','MTC — Tratamiento Médico','LTI — Inc. Tiempo Perdido','SIF/SIFp — Alto Potencial'],datasets:[{data:[pa,mtc,lti,sif],backgroundColor:[typeColors.pa,typeColors.mtc,typeColors.lti,typeColors.sif],borderWidth:3,borderColor:'#fff'}]},
-    options:{plugins:{legend:{position:'bottom',labels:{color:'#3d3d3d',padding:12,font:{family:"'Barlow',sans-serif",size:12,weight:'600'}}}},cutout:'65%'}
+    data:{labels:['PA — Primer Auxilio','MTC — Tratamiento Médico','LTI — Tiempo Perdido'],
+      datasets:[{data:[pa2,mtc2,lti2],backgroundColor:['#1a7a3a',typeColors.mtc,'#c8000a'],borderWidth:3,borderColor:'#fff'}]},
+    options:{
+      maintainAspectRatio:true,
+      plugins:{
+        legend:{position:'right',labels:{color:'#3d3d3d',padding:8,boxWidth:12,font:{family:"'Barlow',sans-serif",size:11,weight:'600'}}},
+        tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed; return ` ${ctx.label}: ${v} (${Math.round(v/tot2*100)}%)`}}},
+        afterDraw: chart => {
+          const ctx2=chart.ctx, cx=chart.chartArea.left+(chart.chartArea.right-chart.chartArea.left)/2, cy=chart.chartArea.top+(chart.chartArea.bottom-chart.chartArea.top)/2;
+          ctx2.save();
+          ctx2.textAlign='center'; ctx2.fillStyle='#1a1a1a';
+          ctx2.font="bold 22px 'Barlow Condensed',sans-serif"; ctx2.fillText(tot2,cx,cy-4);
+          ctx2.font="10px 'Barlow',sans-serif"; ctx2.fillStyle='#888'; ctx2.fillText('incidentes',cx,cy+10);
+          ctx2.font="bold 10px 'Barlow',sans-serif"; ctx2.fillStyle=typeColors.sif; ctx2.fillText(`⚫ ${sif2} SIF/SIFp (${Math.round(sif2/tot2*100)}%)`,cx,cy+24);
+          ctx2.restore();
+        }
+      },
+      cutout:'62%'
+    }
   });
 
   dc('cAlmRep');
@@ -607,16 +775,16 @@ function updateCharts() {
   charts['cEvol']=new Chart(document.getElementById('cEvol'),{
     type:'line',
     data:{labels:['Enero','Febrero','Marzo'],datasets:[
-      {label:'PA',data:[eT[0],fT[0],mT[0]],borderColor:typeColors.pa,backgroundColor:'rgba(232,0,13,.08)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.pa},
+      {label:'PA',data:[eT[0],fT[0],mT[0]],borderColor:typeColors.pa,backgroundColor:'rgba(26,122,58,.08)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.pa},
       {label:'MTC',data:[eT[1],fT[1],mT[1]],borderColor:typeColors.mtc,backgroundColor:'rgba(230,126,0,.08)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.mtc},
-      {label:'LTI',data:[eT[2],fT[2],mT[2]],borderColor:typeColors.lti,backgroundColor:'rgba(26,122,58,.08)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.lti},
+      {label:'LTI',data:[eT[2],fT[2],mT[2]],borderColor:typeColors.lti,backgroundColor:'rgba(200,0,10,.08)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.lti},
       {label:'SIF/SIFp',data:[eT[3],fT[3],mT[3]],borderColor:typeColors.sif,backgroundColor:'rgba(26,26,26,.06)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:typeColors.sif}
     ]},
     options:{...cd}
   });
 
   const top10=[...DF()].sort((a,b)=>val(b,'total')-val(a,'total')).filter(d=>val(d,'total')>0).slice(0,10);
-  const mesAlpha=(m)=>MES==='all'||MES===m?1:.2;
+  const mesAlpha=(m)=>MESES.size===0||MESES.has(m)?1:.2;
   dc('cTop10');
   charts['cTop10']=new Chart(document.getElementById('cTop10'),{
     type:'bar',
@@ -642,14 +810,45 @@ function updateCharts() {
   });
 
   dc('cRegEvol');
-  const evolColors=['#c8000a','#e6001a','#8b0006','#d42008','#ff4040','#a00010','#e63020','#cc1808','#1a7a3a','#1a1a1a'];
+  const evolColors=['#c8000a','#1a7a3a','#1a56db','#e67e00','#7c3aed','#0891b2','#be185d','#854d0e','#374151','#16a34a'];
   charts['cRegEvol']=new Chart(document.getElementById('cRegEvol'),{
     type:'line',
     data:{labels:['Enero','Febrero','Marzo'],datasets:activeREGIONS().map((r,i)=>({
-      label:r.replace('R.',''),data:[RS[r].ene,RS[r].feb,RS[r].mar],
-      borderColor:evolColors[i],backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2
+      label:r.replace('R.',''),
+      data:[RS[r].ene,RS[r].feb,RS[r].mar],
+      borderColor:evolColors[i],
+      backgroundColor:'transparent',
+      tension:.4,
+      pointRadius:5,
+      pointHoverRadius:7,
+      borderWidth:2
     }))},
-    options:{...cd}
+    options:{
+      ...cd,
+      plugins:{
+        legend:{position:'bottom',labels:{color:'#3d3d3d',boxWidth:12,padding:8,font:{family:"'Barlow',sans-serif",size:11,weight:'600'}}},
+        tooltip:{...cd.plugins?.tooltip},
+        afterDraw: chart => {
+          const ctx3=chart.ctx;
+          chart.data.datasets.forEach((ds,di)=>{
+            const meta=chart.getDatasetMeta(di);
+            if(meta.hidden) return;
+            meta.data.forEach((pt,pi)=>{
+              const val=ds.data[pi];
+              if(!val) return;
+              ctx3.save();
+              ctx3.font="bold 11px 'Barlow Condensed',sans-serif";
+              ctx3.fillStyle=ds.borderColor;
+              ctx3.textAlign='center';
+              ctx3.textBaseline= di%2===0 ? 'bottom' : 'top';
+              const offsetY = di%2===0 ? -6 : 6;
+              ctx3.fillText(val, pt.x, pt.y + offsetY);
+              ctx3.restore();
+            });
+          });
+        }
+      }
+    }
   });
 
   dc('cBarStack');
@@ -658,7 +857,7 @@ function updateCharts() {
   ['ene','feb','mar'].forEach((m,mi)=>{
     ['pa','mtc','lti','sif'].forEach(t=>{
       const base=stackColors[t];
-      const alpha=MES==='all'?(mi===0?.9:mi===1?.65:.4):(MES===m?.9:.15);
+      const alpha=MESES.size===0?(mi===0?.9:mi===1?.65:.4):(MESES.has(m)?.9:.15);
       const hex=Math.round(alpha*255).toString(16).padStart(2,'0');
       ds2.push({label:`${['Ene','Feb','Mar'][mi]}-${t==='sif'?'SIF/SIFp':t.toUpperCase()}`,data:activeREGIONS().map(r=>D.filter(d=>d.region===r).reduce((s,d)=>s+d[`${m}_${t}`],0)),backgroundColor:base+hex,borderRadius:2,stack:`s${mi}`});
     });
@@ -697,66 +896,142 @@ function updateHeatmaps(){
   buildHM('hmRegTipo',SR,['PA','MTC','LTI','SIF/SIFp'],(r,t)=>RS[r][t==='SIF/SIFp'?'sif':t.toLowerCase()]);
 }
 
-let rSort={key:'total',asc:false};
+let rSort={key:'default',asc:false};
 function renderRanking(){
   const reg=document.getElementById('fReg').value;
   const zona=document.getElementById('fZona').value;
   const min=parseInt(document.getElementById('fMin').value)||0;
   const search=document.getElementById('fSearch').value.toLowerCase();
   const regFinal = REG || reg;
-  let f=D.filter(d=>(!regFinal||d.region===regFinal)&&(!zona||d.zona_reparto===zona)&&(!search||d.coordinador.toLowerCase().includes(search)));
+
+  // ── Ranking GLOBAL (sin filtro de región/zona) para asignar nivel y posición global ──
+  const nivelFn = d => {
+    if(val(d,'lti')>0) return 4;
+    if(val(d,'sif')>0) return 3;
+    if(val(d,'mtc')>0) return 2;
+    if(val(d,'pa') >0) return 1;
+    return 0;
+  };
+  const globalSort = (a,b) => {
+    const dn=nivelFn(b)-nivelFn(a); if(dn!==0) return dn;
+    const dl=val(b,'lti')-val(a,'lti'); if(dl!==0) return dl;
+    const ds=val(b,'sif')-val(a,'sif'); if(ds!==0) return ds;
+    const dm=val(b,'mtc')-val(a,'mtc'); if(dm!==0) return dm;
+    const dp=val(b,'pa')-val(a,'pa');   if(dp!==0) return dp;
+    return val(b,'total')-val(a,'total');
+  };
+  // Ordenar globalmente (todos los que tienen incidentes) y asignar rankGlobal
+  const globalRanked = D.filter(d=>val(d,'total')>0).sort(globalSort);
+  const rankMap = new Map(globalRanked.map((d,i)=>[d,i]));
+  // Función de nivel basada en posición global
+  const globalSemTag = d => {
+    const rank = rankMap.has(d) ? rankMap.get(d) : 999;
+    const v = val(d,'total');
+    if(v===0) return '';
+    if(rank < 5) return 'sem-negro';
+    if(val(d,'lti')>0 || val(d,'sif')>0) return 'sem-rojo';
+    if(val(d,'mtc')>0) return 'sem-amarillo';
+    if(val(d,'pa') >0) return 'sem-verde';
+    return '';
+  };
+
+  // ── Filtrar para mostrar (región, zona, búsqueda) ──
+  let f=D.filter(d=>(
+    (!regFinal||d.region===regFinal) &&
+    (!zona||d.zona_reparto===zona) &&
+    (!search||d.coordinador.toLowerCase().includes(search)) &&
+    (TIPOS.size===0 || [...TIPOS].some(t => val(d, t) > 0))
+  ));
   const mx=Math.max(...f.map(d=>val(d,'total')),1);
   f=f.filter(d=>val(d,'total')>=min);
+  const mxLTI=Math.max(...f.map(d=>val(d,'lti')),1);
+  const mxSIF=Math.max(...f.map(d=>val(d,'sif')),1);
+  const mxMTC=Math.max(...f.map(d=>val(d,'mtc')),1);
+  const mxPA =Math.max(...f.map(d=>val(d,'pa')),1);
 
-  const sortFns={total:(d)=>val(d,'total'),ene:(d)=>d.ene_total,feb:(d)=>d.feb_total,mar:(d)=>d.mar_total,name:(d)=>d.coordinador,region:(d)=>d.region};
-  f.sort((a,b)=>{
-    const fa=sortFns[rSort.key]||sortFns.total;
-    const va=fa(a),vb=fa(b);
-    if(typeof va==='string') return rSort.asc?va.localeCompare(vb):vb.localeCompare(va);
-    return rSort.asc?va-vb:vb-va;
-  });
+  // Orden por defecto: igual que global (nivel → tipo → cantidad)
+  const sortFns={
+    default: (a,b) => {
+      // 1. Ordenar por NIVEL (CRÍTICO > ALTO > MEDIO > BAJO > sin incidentes)
+      const nivel = d => {
+        if(val(d,'lti')>0) return 4; // CRÍTICO
+        if(val(d,'sif')>0) return 3; // ALTO
+        if(val(d,'mtc')>0) return 2; // MEDIO
+        if(val(d,'pa') >0) return 1; // BAJO
+        return 0;
+      };
+      const dn = nivel(b)-nivel(a); if(dn!==0) return dn;
+      // 2. Dentro del mismo nivel, ordenar por el tipo determinante (más → primero)
+      const dl=val(b,'lti')-val(a,'lti'); if(dl!==0) return dl;
+      const ds=val(b,'sif')-val(a,'sif'); if(ds!==0) return ds;
+      const dm=val(b,'mtc')-val(a,'mtc'); if(dm!==0) return dm;
+      const dp=val(b,'pa')-val(a,'pa');   if(dp!==0) return dp;
+      return val(b,'total')-val(a,'total');
+    },
+    lti:    (a,b) => { const dl=val(b,'lti')-val(a,'lti'); if(dl!==0) return dl; const ds=val(b,'sif')-val(a,'sif'); return ds!==0?ds:val(b,'total')-val(a,'total'); },
+    total:  (a,b) => val(b,'total')-val(a,'total'),
+    sif:    (a,b) => val(b,'sif')-val(a,'sif'),
+    mtc:    (a,b) => val(b,'mtc')-val(a,'mtc'),
+    pa:     (a,b) => val(b,'pa')-val(a,'pa'),
+    ene:    (a,b) => b.ene_total-a.ene_total,
+    feb:    (a,b) => b.feb_total-a.feb_total,
+    mar:    (a,b) => b.mar_total-a.mar_total,
+    name:   (a,b) => a.coordinador.localeCompare(b.coordinador),
+    region: (a,b) => a.region.localeCompare(b.region),
+  };
+  const fn = sortFns[rSort.key] || sortFns.default;
+  f.sort((a,b) => rSort.asc ? -fn(a,b) : fn(a,b));
+
+  // Indicadores de columna activa por tipo
+  const tCols = {lti:'#1a7a3a', sif:'#1a1a1a', mtc:'#e67e00', pa:'#c8000a'};
+  const thStyle = (t) => rSort.key===t ? `background:${tCols[t]}15;color:${tCols[t]};` : '';
 
   let h=`<table class="ranking-table"><thead><tr>
-    <th style="width:36px">#</th>
+    <th style="width:32px">#</th>
     <th onclick="sR('name')">Coordinador ↕</th>
     <th onclick="sR('region')">Región ↕</th>
     <th>Zona</th>
+    <th onclick="sR('lti')" style="text-align:center;${thStyle('lti')}cursor:pointer;border-bottom:3px solid #c8000a">LTI ↕</th>
+    <th onclick="sR('sif')" style="text-align:center;${thStyle('sif')}cursor:pointer;border-bottom:3px solid #1a1a1a">SIF/SIFp ↕</th>
+    <th onclick="sR('mtc')" style="text-align:center;${thStyle('mtc')}cursor:pointer;border-bottom:3px solid #e67e00">MTC ↕</th>
+    <th onclick="sR('pa')"  style="text-align:center;${thStyle('pa')}cursor:pointer;border-bottom:3px solid #1a7a3a">PA ↕</th>
+    <th onclick="sR('total')" style="text-align:center">Total ↕</th>
     <th onclick="sR('ene')" style="text-align:center">Ene ↕</th>
     <th onclick="sR('feb')" style="text-align:center">Feb ↕</th>
     <th onclick="sR('mar')" style="text-align:center">Mar ↕</th>
-    <th onclick="sR('total')" style="text-align:center">Período ↕</th>
-    <th>Tipos</th>
     <th>Nivel</th>
   </tr></thead><tbody>`;
 
   f.forEach((d,i)=>{
     const pv=val(d,'total');
+    const lv=val(d,'lti'), sv=val(d,'sif'), mv=val(d,'mtc'), av=val(d,'pa');
     const pct=Math.round((pv/mx)*100);
-    const semCls=semTag(pv,mx);
+    const semCls=globalSemTag(d);
     const semLabels={'sem-verde':'BAJO','sem-amarillo':'MEDIO','sem-rojo':'ALTO','sem-negro':'CRÍTICO','':'—'};
     const numCls=i===0?'rank-num gold':i===1?'rank-num silver':i===2?'rank-num bronze':'rank-num';
-    const chips=[
-      val(d,'pa')?`<span class="chip chip-pa">PA:${val(d,'pa')}</span>`:'',
-      val(d,'mtc')?`<span class="chip chip-mtc">MTC:${val(d,'mtc')}</span>`:'',
-      val(d,'lti')?`<span class="chip chip-lti">LTI:${val(d,'lti')}</span>`:'',
-      val(d,'sif')?`<span class="chip chip-sif">SIF/SIFp:${val(d,'sif')}</span>`:''
-    ].join('');
-    const eneBold=MES==='ene'?'font-weight:800;color:#c8000a':'';
-    const febBold=MES==='feb'?'font-weight:800;color:#c8000a':'';
-    const marBold=MES==='mar'?'font-weight:800;color:#c8000a':'';
+    const eneBold=MESES.has('ene')||MESES.size===0?'':'color:#bbb';
+    const febBold=MESES.has('feb')||MESES.size===0?'':'color:#bbb';
+    const marBold=MESES.has('mar')||MESES.size===0?'':'color:#bbb';
+    const cellLTI = lv ? `<span style="font-weight:800;color:#c8000a;font-family:'Barlow Condensed',sans-serif;font-size:1rem">${lv}</span>` : '<span style="color:#ccc">—</span>';
+    const cellSIF = sv ? `<span style="font-weight:800;color:#1a1a1a;font-family:'Barlow Condensed',sans-serif;font-size:1rem">${sv}</span>` : '<span style="color:#ccc">—</span>';
+    const cellMTC = mv ? `<span style="font-weight:800;color:#e67e00;font-family:'Barlow Condensed',sans-serif;font-size:1rem">${mv}</span>` : '<span style="color:#ccc">—</span>';
+    const cellPA  = av ? `<span style="font-weight:800;color:#1a7a3a;font-family:'Barlow Condensed',sans-serif;font-size:1rem">${av}</span>` : '<span style="color:#ccc">—</span>';
     h+=`<tr>
       <td class="${numCls}">${i+1}</td>
       <td class="rank-name">${d.coordinador.trim()}</td>
       <td class="rank-region">${d.region}</td>
       <td class="rank-region">${d.zona_reparto}</td>
-      <td style="text-align:center;${eneBold}">${d.ene_total||'—'}</td>
-      <td style="text-align:center;${febBold}">${d.feb_total||'—'}</td>
-      <td style="text-align:center;${marBold}">${d.mar_total||'—'}</td>
+      <td style="text-align:center;background:${lv?'rgba(200,0,10,.06)':'transparent'}">${cellLTI}</td>
+      <td style="text-align:center;background:${sv?'rgba(26,26,26,.04)':'transparent'}">${cellSIF}</td>
+      <td style="text-align:center;background:${mv?'rgba(230,126,0,.06)':'transparent'}">${cellMTC}</td>
+      <td style="text-align:center;background:${av?'rgba(26,122,58,.05)':'transparent'}">${cellPA}</td>
       <td style="text-align:center">
         <span class="rank-total" style="color:${pv===0?'#bbb':pv>=6?'#c8000a':pv>=3?'#e67e00':'#1a7a3a'}">${pv}</span>
         <div class="bar-mini"><div class="${pv>=6?'bar-fill-rojo':pv>=3?'bar-fill-amarillo':'bar-fill-verde'}" style="width:${pct}%"></div></div>
       </td>
-      <td>${chips||'<span style="color:#bbb;font-size:.68rem">sin incidentes</span>'}</td>
+      <td style="text-align:center;${eneBold}">${d.ene_total||'—'}</td>
+      <td style="text-align:center;${febBold}">${d.feb_total||'—'}</td>
+      <td style="text-align:center;${marBold}">${d.mar_total||'—'}</td>
       <td>${semCls?`<span class="semaforo ${semCls}">${semLabels[semCls]}</span>`:''}</td>
     </tr>`;
   });
@@ -798,6 +1073,7 @@ const now = new Date();
 const opciones = { day:'2-digit', month:'long', year:'numeric' };
 document.getElementById('badgeFecha').textContent = 'Actualizado: ' + now.toLocaleDateString('es-MX', opciones);
 
+buildMesPills();
 refreshAll();
 </script>
 </body>
