@@ -387,9 +387,9 @@ nav {
     <div class="kpi sif"><div class="kpi-stripe"></div><div class="kpi-label">⚫ SIF / SIFp</div><div class="kpi-value" id="kpi-sif">—</div><div class="kpi-pct" id="kpi-sif-pct"></div></div>
   </div>
   <div class="summary-bar" id="summaryBar"></div>
-  <div class="charts-row">
+  <div class="charts-row" style="grid-template-columns:2fr 1fr;">
     <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Incidentes por Región</div><canvas id="cRegion" height="155"></canvas></div>
-    <div class="chart-box" style="display:flex;flex-direction:column;"><div class="chart-title"><span class="chart-title-dot"></span>Distribución por Tipo</div><div style="flex:1;display:flex;align-items:center;justify-content:center;max-height:165px;"><canvas id="cDonut" height="150"></canvas></div></div>
+    <div class="chart-box" style="display:flex;flex-direction:column;"><div class="chart-title"><span class="chart-title-dot"></span>Distribución por Tipo</div><div style="flex:1;position:relative;min-height:0;"><canvas id="cDonut"></canvas></div></div>
   </div>
   <div class="charts-row">
     <div class="chart-box"><div class="chart-title"><span class="chart-title-dot"></span>Almacén vs Reparto por Región</div><canvas id="cAlmRep" height="155"></canvas></div>
@@ -740,17 +740,22 @@ function updateCharts() {
     data:{labels:['PA — Primer Auxilio','MTC — Tratamiento Médico','LTI — Tiempo Perdido'],
       datasets:[{data:[pa2,mtc2,lti2],backgroundColor:['#1a7a3a',typeColors.mtc,'#c8000a'],borderWidth:3,borderColor:'#fff'}]},
     options:{
-      maintainAspectRatio:true,
+      maintainAspectRatio:false,
+      responsive:true,
       plugins:{
         legend:{position:'right',labels:{color:'#3d3d3d',padding:8,boxWidth:12,font:{family:"'Barlow',sans-serif",size:11,weight:'600'}}},
         tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed; return ` ${ctx.label}: ${v} (${Math.round(v/tot2*100)}%)`}}},
         afterDraw: chart => {
-          const ctx2=chart.ctx, cx=chart.chartArea.left+(chart.chartArea.right-chart.chartArea.left)/2, cy=chart.chartArea.top+(chart.chartArea.bottom-chart.chartArea.top)/2;
+          const ctx2=chart.ctx;
+          const {left,right,top,bottom}=chart.chartArea;
+          const cx=(left+right)/2, cy=(top+bottom)/2;
+          const r=Math.min(right-left,bottom-top)/2;
+          const fs=Math.max(10,Math.round(r*0.22));
           ctx2.save();
           ctx2.textAlign='center'; ctx2.fillStyle='#1a1a1a';
-          ctx2.font="bold 22px 'Barlow Condensed',sans-serif"; ctx2.fillText(tot2,cx,cy-4);
-          ctx2.font="10px 'Barlow',sans-serif"; ctx2.fillStyle='#888'; ctx2.fillText('incidentes',cx,cy+10);
-          ctx2.font="bold 10px 'Barlow',sans-serif"; ctx2.fillStyle=typeColors.sif; ctx2.fillText(`⚫ ${sif2} SIF/SIFp (${Math.round(sif2/tot2*100)}%)`,cx,cy+24);
+          ctx2.font=`bold ${fs*1.8}px 'Barlow Condensed',sans-serif`; ctx2.fillText(tot2,cx,cy+fs*0.3);
+          ctx2.font=`${fs*0.85}px 'Barlow',sans-serif`; ctx2.fillStyle='#888'; ctx2.fillText('incidentes',cx,cy+fs*1.4);
+          ctx2.font=`bold ${fs*0.82}px 'Barlow',sans-serif`; ctx2.fillStyle=typeColors.sif; ctx2.fillText(`⚫ ${sif2} SIF/SIFp (${Math.round(sif2/tot2*100)}%)`,cx,cy+fs*2.4);
           ctx2.restore();
         }
       },
